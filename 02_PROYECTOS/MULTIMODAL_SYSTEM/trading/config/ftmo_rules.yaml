@@ -1,0 +1,12 @@
+account_type: "FTMO Challenge"
+
+initial_balance: 100000
+
+max_daily_loss_percent: 2
+max_total_loss_percent: 8
+
+
+profit_target_percent: 10
+
+max_trading_days: 30
+min_trading_days: 4
