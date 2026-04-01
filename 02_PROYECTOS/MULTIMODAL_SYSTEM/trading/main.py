@@ -55,6 +55,9 @@ def main():
         # Audit
         save_hash(trade_hash)
 
+        # Add hash to trade
+        trade["hash"] = trade_hash
+
         # Log CSV
         save_trade(trade)
 
@@ -62,6 +65,7 @@ def main():
 
     else:
         print("No trade signal.")
+
 
 
 if __name__ == "__main__":
