@@ -7,31 +7,84 @@
       font-family: Arial;
       background: #0d0d0d;
       color: white;
-      text-align: center;
-      padding: 50px;
+      margin: 0;
     }
-    h1 { font-size: 42px; }
-    .box {
-      margin-top: 30px;
+
+    header {
+      background: #111;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .container {
       padding: 20px;
-      border: 1px solid #333;
+    }
+
+    .folder {
+      cursor: pointer;
+      margin: 5px 0;
+    }
+
+    .children {
+      margin-left: 20px;
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>🚀 PRD System</h1>
-  <p>Arquitectura modular de creación de software</p>
+<header>🚀 PRD System Explorer</header>
 
-  <div class="box">
-    <h2>🧠 Core System</h2>
-    <p>PRD Forge activo</p>
-  </div>
+<div class="container" id="explorer"></div>
 
-  <div class="box">
-    <h2>⚙️ Estado</h2>
-    <p>Inicializando módulos</p>
-  </div>
+<script>
+const prd = {
+  "01_ENTORNO": ["docker", "config"],
+  "02_PROYECTOS": ["trading", "music"],
+  "08_CORE_SYSTEM": {
+    "prd-forge": ["modules", "engine", "templates"]
+  }
+};
+
+function createNode(name, value) {
+  const div = document.createElement("div");
+  div.className = "folder";
+  div.innerText = "📁 " + name;
+
+  const childrenDiv = document.createElement("div");
+  childrenDiv.className = "children";
+
+  div.onclick = () => {
+    childrenDiv.style.display =
+      childrenDiv.style.display === "none" ? "block" : "none";
+  };
+
+  if (Array.isArray(value)) {
+    value.forEach(item => {
+      const child = document.createElement("div");
+      child.innerText = "📄 " + item;
+      childrenDiv.appendChild(child);
+    });
+  } else if (typeof value === "object") {
+    for (let key in value) {
+      childrenDiv.appendChild(createNode(key, value[key]));
+    }
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(div);
+  wrapper.appendChild(childrenDiv);
+
+  return wrapper;
+}
+
+const explorer = document.getElementById("explorer");
+
+for (let key in prd) {
+  explorer.appendChild(createNode(key, prd[key]));
+}
+</script>
 
 </body>
 </html>
