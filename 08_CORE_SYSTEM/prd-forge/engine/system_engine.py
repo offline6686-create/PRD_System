@@ -1,5 +1,6 @@
 from modules.trading_system import TradingModule
 from modules.dashboard_system import DashboardModule
+from core.file_generator import FileGenerator
 
 
 class SystemEngine:
@@ -29,6 +30,17 @@ class SystemEngine:
     def build(self):
 
         print("\n[PRD-FORGE] Loading modules...\n")
+
+        project_name = self.config.get(
+            "system_name",
+            "GeneratedSystem"
+        )
+
+        generator = FileGenerator()
+
+        generator.create_project(
+            project_name
+        )
 
         self.load_modules()
 

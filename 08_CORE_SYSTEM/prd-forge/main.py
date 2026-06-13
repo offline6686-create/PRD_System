@@ -1,22 +1,19 @@
 from engine.system_engine import SystemEngine
 
+from config.system_config import SystemConfig
+
 
 def main():
 
-    config = {
+    config = SystemConfig(
+        "config/profiles/trading_profile.yaml"
+    )
 
-        "system_name": "TradingSystem",
-
-        "modules": [
-            "trading",
-            "dashboard"
-        ]
-    }
-
-    engine = SystemEngine(config)
+    engine = SystemEngine(config.data)
 
     engine.build()
 
 
 if __name__ == "__main__":
+
     main()
