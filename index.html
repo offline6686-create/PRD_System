@@ -7,270 +7,445 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        body { background-color: #000000; color: #ffffff; font-family: system-ui, -apple-system, sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .white-key { width: 40px; height: 160px; background: white; border: 1px solid #ccc; display: inline-block; position: relative; border-radius: 0 0 5px 5px; cursor: pointer; }
-        .white-key.active { background: #3b82f6 !important; }
-        .black-key { width: 24px; height: 100px; background: #1e293b; display: inline-block; margin-left: -12px; margin-right: -12px; z-index: 10; position: relative; border-radius: 0 0 4px 4px; cursor: pointer; }
-        .black-key.active { background: #60a5fa !important; }
+        
+        /* Monochromatic B&W Piano Styling */
+        .piano-container { display: flex; justify-content: center; position: relative; user-select: none; padding: 20px 0; }
+        .white-key { width: 44px; height: 180px; background: #ffffff; border: 1px solid #18181b; display: inline-block; position: relative; border-radius: 0 0 6px 6px; cursor: pointer; transition: background 0.1s; }
+        .white-key.active { background: #e2e8f0 !important; border-bottom: 6px solid #000000; }
+        .black-key { width: 28px; height: 110px; background: #09090b; border: 1px solid #27272a; display: inline-block; margin-left: -14px; margin-right: -14px; z-index: 10; position: relative; border-radius: 0 0 5px 5px; cursor: pointer; transition: background 0.1s; }
+        .black-key.active { background: #52525b !important; }
+        .key-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 10px; font-weight: bold; color: #52525b; pointer-events: none; }
+        .black-key .key-label { color: #a1a1aa; bottom: 6px; }
+
+        /* Modal styling */
+        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 50; justify-content: center; align-items: center; }
+        .modal-bg.active { display: flex; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+<body class="bg-black text-white min-h-screen flex flex-col selection:bg-white selection:text-black">
 
-    <!-- Header / Navbar -->
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="bg-blue-600 p-2 rounded-lg text-white font-bold">PRD</div>
+    <!-- Header / Navbar Monochromatic -->
+    <header class="bg-black border-b border-zinc-800 px-6 py-4 flex flex-wrap justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <div class="bg-white text-black font-black px-3 py-1.5 rounded text-lg tracking-tighter">PRD</div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">PRD System Localhost Portal</h1>
-                <p class="text-xs text-slate-400">Sistema Multimodal Unificado & PRD Forge Core</p>
+                <h1 class="text-xl font-bold tracking-tight text-white">PRD System Localhost Portal</h1>
+                <p class="text-xs text-zinc-400">Sistema Multimodal Unificado | Blanco & Negro High-Contrast</p>
             </div>
         </div>
         <div class="flex items-center space-x-4">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span class="w-2 h-2 mr-2 bg-emerald-400 rounded-full animate-pulse"></span> Localhost Online (:3000)
+            <span class="inline-flex items-center px-3 py-1 rounded border border-zinc-700 text-xs font-mono text-zinc-300 bg-zinc-900">
+                <span class="w-2 h-2 mr-2 bg-white rounded-full animate-ping"></span> localhost:3000
             </span>
-            <span class="text-xs text-slate-400"><i class="fab fa-github mr-1"></i> main branch</span>
+            <span class="text-xs text-zinc-400 font-mono"><i class="fab fa-github mr-1"></i> main</span>
         </div>
     </header>
 
     <!-- Main Navigation Tabs -->
-    <div class="bg-slate-900/50 border-b border-slate-800 px-6">
-        <nav class="flex space-x-6 overflow-x-auto" id="tabs">
-            <button onclick="switchTab('forge')" id="btn-forge" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-500 text-blue-400 flex items-center gap-2">
-                <i class="fas fa-cubes"></i> PRD Forge (1-Click)
+    <div class="bg-black border-b border-zinc-800 px-6">
+        <nav class="flex space-x-8 overflow-x-auto" id="tabs">
+            <button onclick="switchTab('music')" id="btn-music" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-white text-white flex items-center gap-2">
+                <i class="fas fa-piano"></i> Academia & Chordy MIDI
             </button>
-            <button onclick="switchTab('trading')" id="btn-trading" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+            <button onclick="switchTab('trading')" id="btn-trading" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
                 <i class="fas fa-chart-line"></i> FTMO Trading Bot
             </button>
-            <button onclick="switchTab('economy')" id="btn-economy" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+            <button onclick="switchTab('economy')" id="btn-economy" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
                 <i class="fas fa-globe"></i> Dashboard Económico
             </button>
-            <button onclick="switchTab('music')" id="btn-music" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
-                <i class="fas fa-music"></i> Music Space + Chordy MIDI
+            <button onclick="switchTab('payments')" id="btn-payments" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-university"></i> Pasarelas & Bancos
             </button>
-            <button onclick="switchTab('personal')" id="btn-personal" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
-                <i class="fas fa-tasks"></i> Personal & Ecommerce
+            <button onclick="switchTab('forge')" id="btn-forge" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-cubes"></i> PRD Forge Engine
             </button>
         </nav>
     </div>
 
-    <!-- Content Body -->
-    <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
-        <!-- TAB 1: PRD FORGE -->
-        <div id="tab-forge" class="tab-content active space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <div class="flex justify-between items-center mb-4">
+        <!-- TAB 1: MUSIC SPACE ACADEMY & CHORDY MIDI -->
+        <div id="tab-music" class="tab-content active space-y-6">
+            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
+                
+                <!-- Chordy Header & Controls -->
+                <div class="flex flex-wrap justify-between items-center border-b border-zinc-800 pb-4">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-100"><i class="fas fa-magic text-blue-500 mr-2"></i> PRD Forge - Generador Meta-Sistema</h2>
-                        <p class="text-sm text-slate-400">Genera proyectos enteros (Frontend, Backend, DB, Docker, Auth) con un solo clic.</p>
+                        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                            <i class="fas fa-music"></i> Detector de Acordes de Piano en Tiempo Real ("Chordy")
+                        </h2>
+                        <p class="text-xs text-zinc-400 mt-1">Conecta tu teclado USB/MIDI o haz clic en las teclas del piano. Escucharás el sonido real y verás el acorde exacto en pantalla.</p>
                     </div>
-                    <span class="bg-blue-500/10 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-500/20">System Engine v1.0</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <button onclick="triggerGenerate('TradingSystem')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
-                        <div class="text-blue-400 text-xl mb-2"><i class="fas fa-robot"></i></div>
-                        <div class="font-semibold text-sm">Generar Trading Bot</div>
-                        <div class="text-xs text-slate-400">Strategy, Risk & Audit</div>
-                    </button>
-                    <button onclick="triggerGenerate('EconomicDashboard')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
-                        <div class="text-emerald-400 text-xl mb-2"><i class="fas fa-landmark"></i></div>
-                        <div class="font-semibold text-sm">Generar Dashboard Económico</div>
-                        <div class="text-xs text-slate-400">FED, BCE, BCRA & FMI</div>
-                    </button>
-                    <button onclick="triggerGenerate('MusicAcademy')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
-                        <div class="text-purple-400 text-xl mb-2"><i class="fas fa-graduation-cap"></i></div>
-                        <div class="font-semibold text-sm">Generar Academia de Música</div>
-                        <div class="text-xs text-slate-400">LMS, Zoom & Chordy</div>
-                    </button>
-                    <button onclick="triggerGenerate('EcommerceModule')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
-                        <div class="text-amber-400 text-xl mb-2"><i class="fas fa-shopping-cart"></i></div>
-                        <div class="font-semibold text-sm">Generar E-commerce</div>
-                        <div class="text-xs text-slate-400">Stripe & MercadoPago</div>
-                    </button>
-                </div>
-                <div id="forge-output" class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs text-emerald-400 h-32 overflow-y-auto">
-                    [PRD-FORGE Engine] Esperando orden de generación...
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: TRADING BOT -->
-        <div id="tab-trading" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <div class="text-xs text-slate-400 font-medium mb-1">Balance Actual (FTMO)</div>
-                    <div class="text-2xl font-bold text-emerald-400">$101,450.00 USD</div>
-                    <div class="text-xs text-emerald-500 mt-1"><i class="fas fa-arrow-up"></i> +1.45% de retorno</div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <div class="text-xs text-slate-400 font-medium mb-1">Drawdown Diario Actual</div>
-                    <div class="text-2xl font-bold text-blue-400">0.85%</div>
-                    <div class="text-xs text-slate-400 mt-1">Límite FTMO: Max 5.0% (Buffer 4.5%)</div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <div class="text-xs text-slate-400 font-medium mb-1">Firma Criptográfica SHA-256</div>
-                    <div class="text-xs font-mono text-slate-300 truncate">a3f9e81b2c4d5e6f7a8b9c0d1e2f3a4b...</div>
-                    <div class="text-xs text-emerald-400 mt-1"><i class="fas fa-shield-alt"></i> Auditoría inmutable OK</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 3: DASHBOARD ECONÓMICO -->
-        <div id="tab-economy" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                    <div class="text-xs text-blue-400 font-bold mb-1">🇺🇸 FED (Reserva Federal)</div>
-                    <div class="text-xl font-bold">4.25% - 4.50%</div>
-                    <div class="text-xs text-slate-400">Tasa de Fondos Federales</div>
-                    <div class="mt-2 text-xs text-slate-300">Inflación CPI: <span class="text-emerald-400 font-semibold">2.4% YoY</span></div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                    <div class="text-xs text-amber-400 font-bold mb-1">🇪🇺 BCE (Banco Central Europeo)</div>
-                    <div class="text-xl font-bold">3.00%</div>
-                    <div class="text-xs text-slate-400">Tasa Refi Eurozona</div>
-                    <div class="mt-2 text-xs text-slate-300">Inflación HICP: <span class="text-emerald-400 font-semibold">2.1% YoY</span></div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                    <div class="text-xs text-emerald-400 font-bold mb-1">🇦🇷 BCRA (Argentina)</div>
-                    <div class="text-xl font-bold">$31,000 M USD</div>
-                    <div class="text-xs text-slate-400">Reservas Internacionales</div>
-                    <div class="mt-2 text-xs text-slate-300">IPC Mensual: <span class="text-amber-400 font-semibold">2.1%</span></div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                    <div class="text-xs text-purple-400 font-bold mb-1">🌐 FMI (Proyección PIB)</div>
-                    <div class="text-xl font-bold">+3.2% Global</div>
-                    <div class="text-xs text-slate-400">Crecimiento estimado</div>
-                    <div class="mt-2 text-xs text-slate-300">EE.UU: +2.6% | Arg: +5.0%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: MUSIC SPACE + CHORDY MIDI -->
-        <div id="tab-music" class="tab-content space-y-6">
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-6">
-                <div class="flex flex-wrap justify-between items-center">
-                    <div>
-                        <h2 class="text-lg font-bold text-purple-300"><i class="fas fa-piano text-purple-400 mr-2"></i> Music Space - Detector de Acordes MIDI ("Chordy")</h2>
-                        <p class="text-xs text-slate-400">Conecta tu teclado USB/MIDI para ver los acordes en tiempo real.</p>
-                    </div>
-                    <div class="text-right">
-                        <span id="midi-status" class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 px-3 py-1 rounded-full">
-                            <i class="fas fa-plug mr-1"></i> Esperando dispositivo MIDI...
+                    <div class="flex items-center space-x-3">
+                        <button onclick="openZoomModal()" class="px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-zinc-200 transition flex items-center gap-2">
+                            <i class="fas fa-video"></i> Abrir Clase Zoom en Vivo
+                        </button>
+                        <span id="midi-status" class="text-xs border border-zinc-700 bg-zinc-900 text-zinc-300 px-3 py-2 rounded font-mono">
+                            <i class="fas fa-plug mr-1"></i> Web MIDI: Esperando Teclado...
                         </span>
                     </div>
                 </div>
 
-                <!-- Live Chord Display -->
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 text-center">
-                    <div class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Acorde Detectado en Tiempo Real</div>
-                    <div id="detected-chord" class="text-5xl font-black text-purple-400 my-2">Cmaj7</div>
-                    <div id="chord-formula" class="text-sm text-slate-400">Tónica: C | Fórmula: Major 7th | Notas: [C, E, G, B]</div>
+                <!-- Real-time Chord Screen -->
+                <div class="bg-black p-8 rounded-xl border border-zinc-800 text-center space-y-2">
+                    <div class="text-xs uppercase tracking-widest font-mono text-zinc-500">ACORDE DETECTADO EN TIEMPO REAL</div>
+                    <div id="chord-display" class="text-6xl font-black tracking-tight text-white py-2">C Major</div>
+                    <div id="chord-details" class="text-sm font-mono text-zinc-400">Tónica: C | Fórmula: Major Triad | Notas: C4 - E4 - G4</div>
                 </div>
 
-                <!-- Virtual Piano Visualizer -->
-                <div class="flex justify-center overflow-x-auto py-4 bg-slate-950 rounded-xl border border-slate-800">
-                    <div class="flex relative select-none" id="piano-keyboard">
-                        <div class="white-key active" data-note="60"></div>
-                        <div class="black-key" data-note="61"></div>
-                        <div class="white-key" data-note="62"></div>
-                        <div class="black-key" data-note="63"></div>
-                        <div class="white-key active" data-note="64"></div>
-                        <div class="white-key" data-note="65"></div>
-                        <div class="black-key" data-note="66"></div>
-                        <div class="white-key active" data-note="67"></div>
-                        <div class="black-key" data-note="68"></div>
-                        <div class="white-key" data-note="69"></div>
-                        <div class="black-key" data-note="70"></div>
-                        <div class="white-key active" data-note="71"></div>
+                <!-- Interactive Virtual Piano Keyboard (Clickable + MIDI) -->
+                <div class="bg-black border border-zinc-800 rounded-xl p-4 text-center">
+                    <div class="text-xs font-mono text-zinc-500 mb-2">Haz clic en las teclas para tocar notas y probar la detección de acordes:</div>
+                    <div class="piano-container overflow-x-auto" id="piano">
+                        <div class="white-key" data-note="60" onclick="toggleKey(60)"><span class="key-label">C4</span></div>
+                        <div class="black-key" data-note="61" onclick="toggleKey(61)"><span class="key-label">C#</span></div>
+                        <div class="white-key" data-note="62" onclick="toggleKey(62)"><span class="key-label">D4</span></div>
+                        <div class="black-key" data-note="63" onclick="toggleKey(63)"><span class="key-label">D#</span></div>
+                        <div class="white-key" data-note="64" onclick="toggleKey(64)"><span class="key-label">E4</span></div>
+                        <div class="white-key" data-note="65" onclick="toggleKey(65)"><span class="key-label">F4</span></div>
+                        <div class="black-key" data-note="66" onclick="toggleKey(66)"><span class="key-label">F#</span></div>
+                        <div class="white-key" data-note="67" onclick="toggleKey(67)"><span class="key-label">G4</span></div>
+                        <div class="black-key" data-note="68" onclick="toggleKey(68)"><span class="key-label">G#</span></div>
+                        <div class="white-key" data-note="69" onclick="toggleKey(69)"><span class="key-label">A4</span></div>
+                        <div class="black-key" data-note="70" onclick="toggleKey(70)"><span class="key-label">A#</span></div>
+                        <div class="white-key" data-note="71" onclick="toggleKey(71)"><span class="key-label">B4</span></div>
+                        <div class="white-key" data-note="72" onclick="toggleKey(72)"><span class="key-label">C5</span></div>
+                    </div>
+                    <div class="mt-3 flex justify-center space-x-4">
+                        <button onclick="clearPiano()" class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-xs font-mono text-zinc-300 rounded hover:bg-zinc-800">
+                            Limpiar Teclas
+                        </button>
                     </div>
                 </div>
 
-                <!-- Extra Music Academy Services -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
-                    <div class="bg-slate-800/50 p-4 rounded-lg">
-                        <div class="text-sm font-semibold text-slate-200 mb-1"><i class="fas fa-video text-blue-400 mr-2"></i> Clases Zoom en Vivo</div>
-                        <div class="text-xs text-slate-400">Salas integradas con credenciales JWT automáticas.</div>
+                <!-- Backing Tracks & PDF Player -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fas fa-sliders-h"></i> Backing Tracks Audio Engine
+                        </h3>
+                        <p class="text-xs text-zinc-400">Controles de reproductor en tiempo real (Pitch Shift & Tempo):</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span>Velocidad (Tempo): <span id="tempo-val">1.0x</span></span>
+                                <input type="range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('tempo-val').innerText = this.value + 'x'">
+                            </div>
+                            <div class="flex justify-between text-xs font-mono">
+                                <span>Tono (Pitch Shift): <span id="pitch-val">0 semitonos</span></span>
+                                <input type="range" min="-6" max="6" step="1" value="0" oninput="document.getElementById('pitch-val').innerText = this.value + ' semitonos'">
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg">
-                        <div class="text-sm font-semibold text-slate-200 mb-1"><i class="fas fa-sliders-h text-amber-400 mr-2"></i> Backing Tracks Audio Engine</div>
-                        <div class="text-xs text-slate-400">Pitch Shift (cambio de tono) y Tempo Control sin deformar audio.</div>
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fas fa-file-pdf"></i> Visor de Partituras PDF
+                        </h3>
+                        <p class="text-xs text-zinc-400">Métodos de piano y partituras de estudio integradas:</p>
+                        <div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center text-xs">
+                            <span><i class="fas fa-book mr-2"></i> Metodo_Armonia_Moderna_Piano.pdf</span>
+                            <button onclick="alert('Abriendo visor de PDF interactivo...')" class="px-2 py-1 bg-white text-black font-bold text-xs rounded">Ver PDF</button>
+                        </div>
                     </div>
-                    <div class="bg-slate-800/50 p-4 rounded-lg">
-                        <div class="text-sm font-semibold text-slate-200 mb-1"><i class="credit-card text-emerald-400 mr-2"></i> Pasarelas de Pago</div>
-                        <div class="text-xs text-slate-400">Stripe Checkout + MercadoPago Checkout Pro integrados.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 2: PASARELAS DE PAGO & BANCOS (ARGENTINA & EXTERIOR) -->
+        <div id="tab-payments" class="tab-content space-y-6">
+            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
+                <div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                        <i class="fas fa-university"></i> Conexión con Bancos & Pasarelas de Pago
+                    </h2>
+                    <p class="text-xs text-zinc-400 mt-1">Integración directa para cobranzas de cursos y membresías en Argentina y el Exterior.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Argentina Banks -->
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                                🇦🇷 Argentina (Bancos & MercadoPago)
+                            </h3>
+                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">Conectado</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
+                                <div class="font-bold text-white">MercadoPago (Checkout Pro & QR)</div>
+                                <div class="text-zinc-400">Procesa Tarjetas de Crédito/Débito, Mercado Crédito y Saldo en Cuenta MP.</div>
+                                <button onclick="simulatePayment('MercadoPago ARS $45.000')" class="mt-2 w-full py-1.5 bg-white text-black font-bold rounded">Pagar con MercadoPago</button>
+                            </div>
+                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
+                                <div class="font-bold text-white">Transferencia Bancaria Directa (CBU / Alias)</div>
+                                <div class="font-mono text-zinc-400">Banco Galicia | BBVA | Banco Nación | Santander</div>
+                                <div class="font-mono text-zinc-300">Alias: <span class="text-white font-bold">MUSIC.SPACE.ARG</span></div>
+                                <button onclick="alert('CBU Copiado al portapapeles. CBU: 0070012300000012345678')" class="mt-2 w-full py-1.5 bg-zinc-800 text-white font-bold rounded border border-zinc-700">Copiar CBU / Alias</button>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- International Banks -->
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                                🌐 Exterior / Internacional (USD & EUR)
+                            </h3>
+                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">Conectado</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
+                                <div class="font-bold text-white">Stripe Checkout (Visa / Mastercard / Amex)</div>
+                                <div class="text-zinc-400">Cobros internacionales automáticos y suscripciones recurrentes en USD.</div>
+                                <button onclick="simulatePayment('Stripe USD $99.00')" class="mt-2 w-full py-1.5 bg-white text-black font-bold rounded">Pagar con Stripe (USD)</button>
+                            </div>
+                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
+                                <div class="font-bold text-white">PayPal & Transferencia Internacional Wise / SWIFT</div>
+                                <div class="text-zinc-400">Acepta PayPal checkout e IBAN bancario internacional.</div>
+                                <button onclick="simulatePayment('PayPal USD $99.00')" class="mt-2 w-full py-1.5 bg-zinc-800 text-white font-bold rounded border border-zinc-700">Pagar con PayPal / Wise</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 3: TRADING BOT MONITOR -->
+        <div id="tab-trading" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
+                    <div class="text-xs text-zinc-400 font-mono mb-1">Balance Actual (Cuenta FTMO)</div>
+                    <div class="text-3xl font-black text-white">$101,450.00 USD</div>
+                    <div class="text-xs text-zinc-400 mt-2"><i class="fas fa-arrow-up text-white"></i> +1.45% de retorno positivo</div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
+                    <div class="text-xs text-zinc-400 font-mono mb-1">Drawdown Diario (Regla FTMO 5%)</div>
+                    <div class="text-3xl font-black text-white">0.85%</div>
+                    <div class="text-xs text-zinc-400 mt-2">Buffer de seguridad activado a 4.5%</div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
+                    <div class="text-xs text-zinc-400 font-mono mb-1">Firma Criptográfica SHA-256</div>
+                    <div class="text-xs font-mono text-zinc-300 truncate">a3f9e81b2c4d5e6f7a8b9c0d1e2f3a4b...</div>
+                    <div class="text-xs text-zinc-400 mt-2"><i class="fas fa-shield-alt text-white"></i> Auditoría inmutable activa</div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 5: PERSONAL & ECOMMERCE -->
-        <div id="tab-personal" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <h3 class="font-bold text-slate-200 mb-3"><i class="fas fa-tasks text-blue-400 mr-2"></i> Tareas Personales</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li class="p-2 bg-slate-800/50 rounded flex justify-between"><span>FTMO Bot en Demo</span><span class="text-emerald-400 text-xs font-semibold">Completada</span></li>
-                        <li class="p-2 bg-slate-800/50 rounded flex justify-between"><span>Probar Detector MIDI con Piano USB</span><span class="text-blue-400 text-xs font-semibold">En Proceso</span></li>
-                        <li class="p-2 bg-slate-800/50 rounded flex justify-between"><span>Subir cambios a GitHub</span><span class="text-emerald-400 text-xs font-semibold">Completada</span></li>
-                    </ul>
+        <!-- TAB 4: DASHBOARD ECONÓMICO -->
+        <div id="tab-economy" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
+                    <div class="text-xs font-mono text-zinc-400 mb-1">🇺🇸 FED (Reserva Federal)</div>
+                    <div class="text-2xl font-black text-white">4.25% - 4.50%</div>
+                    <div class="text-xs text-zinc-400">Tasa Fondos Federales</div>
+                    <div class="mt-2 text-xs text-zinc-300 font-mono">US CPI YoY: <span class="text-white font-bold">2.4%</span></div>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <h3 class="font-bold text-slate-200 mb-3"><i class="fas fa-store text-amber-400 mr-2"></i> E-commerce Store</h3>
-                    <div class="space-y-2 text-sm">
-                        <div class="p-2 bg-slate-800/50 rounded flex justify-between items-center">
-                            <span>Curso Piano Armónico</span>
-                            <span class="font-bold text-emerald-400">$99.00 USD</span>
-                        </div>
-                        <div class="p-2 bg-slate-800/50 rounded flex justify-between items-center">
-                            <span>Pack 100 Backing Tracks Pro</span>
-                            <span class="font-bold text-emerald-400">$49.00 USD</span>
-                        </div>
-                    </div>
+                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
+                    <div class="text-xs font-mono text-zinc-400 mb-1">🇪🇺 BCE (Banco Central Europeo)</div>
+                    <div class="text-2xl font-black text-white">3.00%</div>
+                    <div class="text-xs text-zinc-400">Tasa Refi Eurozona</div>
+                    <div class="mt-2 text-xs text-zinc-300 font-mono">HICP YoY: <span class="text-white font-bold">2.1%</span></div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
+                    <div class="text-xs font-mono text-zinc-400 mb-1">🇦🇷 BCRA (Argentina)</div>
+                    <div class="text-2xl font-black text-white">$31,000 M USD</div>
+                    <div class="text-xs text-zinc-400">Reservas Internacionales</div>
+                    <div class="mt-2 text-xs text-zinc-300 font-mono">IPC Mensual: <span class="text-white font-bold">2.1%</span></div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
+                    <div class="text-xs font-mono text-zinc-400 mb-1">🌐 FMI (Proyección PIB)</div>
+                    <div class="text-2xl font-black text-white">+3.2% Global</div>
+                    <div class="text-xs text-zinc-400">Crecimiento estimado</div>
+                    <div class="mt-2 text-xs text-zinc-300 font-mono">EE.UU: +2.6% | Arg: +5.0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: PRD FORGE ENGINE -->
+        <div id="tab-forge" class="tab-content space-y-6">
+            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-4">
+                <h2 class="text-lg font-bold text-white"><i class="fas fa-magic mr-2"></i> PRD Forge - Motor de Generación Meta-Sistema</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="triggerForge('TradingSystem')" class="p-4 bg-black border border-zinc-800 hover:border-white rounded-lg text-left transition">
+                        <div class="font-bold text-white text-sm">Generar Trading Module</div>
+                        <div class="text-xs text-zinc-400">Risk, Strategy & Audit</div>
+                    </button>
+                    <button onclick="triggerForge('MusicAcademy')" class="p-4 bg-black border border-zinc-800 hover:border-white rounded-lg text-left transition">
+                        <div class="font-bold text-white text-sm">Generar Music LMS</div>
+                        <div class="text-xs text-zinc-400">Chordy MIDI & Zoom</div>
+                    </button>
+                    <button onclick="triggerForge('EconomicDashboard')" class="p-4 bg-black border border-zinc-800 hover:border-white rounded-lg text-left transition">
+                        <div class="font-bold text-white text-sm">Generar Dashboard Económico</div>
+                        <div class="text-xs text-zinc-400">FED, BCE, BCRA, FMI</div>
+                    </button>
+                </div>
+                <div id="forge-log" class="bg-black p-4 rounded border border-zinc-800 font-mono text-xs text-zinc-300 h-28 overflow-y-auto">
+                    [PRD-FORGE Engine] Esperando comando...
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 px-6 py-4 text-center text-xs text-slate-500">
-        PRD System © 2026 - Conectado a C:/PRD_System - Sistema Multimodal Autónomo
-    </footer>
+    <!-- ZOOM MODAL (Interactive) -->
+    <div id="zoom-modal" class="modal-bg">
+        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl max-w-lg w-full space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                    <i class="fas fa-video"></i> Clase Zoom en Vivo - Music Space
+                </h3>
+                <button onclick="closeZoomModal()" class="text-zinc-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div class="p-3 bg-black border border-zinc-800 rounded">
+                    <div class="font-bold text-white">Masterclass: Armonía Moderna & Acordes de Piano</div>
+                    <div class="text-zinc-400 mt-1">ID de Reunión: <span class="font-mono text-white">987-6543-210</span></div>
+                    <div class="text-zinc-400">Estado: <span class="text-emerald-400 font-bold">EN VIVO AHORA</span></div>
+                </div>
+                <p class="text-zinc-400">Haz clic abajo para abrir e ingresar a la sala de Zoom directamente:</p>
+                <a href="https://zoom.us/j/9876543210?pwd=MusicSpaceLiveClass2026" target="_blank" class="block w-full py-3 bg-white text-black text-center font-bold text-sm rounded hover:bg-zinc-200">
+                    <i class="fas fa-external-link-alt mr-2"></i> Unirse a la Clase en Zoom
+                </a>
+            </div>
+        </div>
+    </div>
 
+    <!-- Web Audio Synthesizer & Chordy Detection Logic -->
     <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('border-blue-500', 'text-blue-400');
-                el.classList.add('border-transparent', 'text-slate-400');
+        const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let activeNotes = new Set([60, 64, 67]); // Default C Major (C4, E4, G4)
+
+        // Web Audio Synthesizer to play piano notes
+        function playNoteFreq(midiNote) {
+            const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.8);
+        }
+
+        function toggleKey(midiNote) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            if (activeNotes.has(midiNote)) {
+                activeNotes.delete(midiNote);
+            } else {
+                activeNotes.add(midiNote);
+                playNoteFreq(midiNote);
+            }
+            updateChordDisplay();
+        }
+
+        function clearPiano() {
+            activeNotes.clear();
+            updateChordDisplay();
+        }
+
+        function updateChordDisplay() {
+            // Update key UI styling
+            document.querySelectorAll('#piano .white-key, #piano .black-key').forEach(el => {
+                const note = parseInt(el.getAttribute('data-note'));
+                if (activeNotes.has(note)) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
             });
 
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            const btn = document.getElementById(`btn-${tabName}`);
-            btn.classList.add('border-blue-500', 'text-blue-400');
-            btn.classList.remove('border-transparent', 'text-slate-400');
+            const notesArray = Array.from(activeNotes).sort((a,b) => a-b);
+            const displayEl = document.getElementById('chord-display');
+            const detailsEl = document.getElementById('chord-details');
+
+            if (notesArray.length === 0) {
+                displayEl.innerText = "Sin Selección";
+                detailsEl.innerText = "Toca teclas en el piano o conecta tu teclado MIDI";
+                return;
+            }
+
+            const pitchClasses = Array.from(new Set(notesArray.map(n => n % 12))).sort((a,b) => a-b);
+            const noteNamesList = notesArray.map(n => NOTE_NAMES[n % 12] + Math.floor(n / 12 - 1));
+
+            // Basic chord matching logic
+            const rootPC = pitchClasses[0];
+            const rootName = NOTE_NAMES[rootPC];
+            const intervals = pitchClasses.map(pc => (pc - rootPC + 12) % 12).sort((a,b) => a-b);
+            const keyStr = intervals.join(',');
+
+            let chordName = rootName;
+            let formulaName = "Custom Cluster";
+
+            if (keyStr === '0,4,7') { chordName = `${rootName} Major`; formulaName = "Triada Mayor"; }
+            else if (keyStr === '0,3,7') { chordName = `${rootName} Minor`; formulaName = "Triada Menor"; }
+            else if (keyStr === '0,4,7,11') { chordName = `${rootName}maj7`; formulaName = "Mayor con 7ma Mayor"; }
+            else if (keyStr === '0,3,7,10') { chordName = `${rootName}m7`; formulaName = "Menor con 7ma Menor"; }
+            else if (keyStr === '0,4,7,10') { chordName = `${rootName}7`; formulaName = "Dominante 7ma"; }
+            else if (keyStr === '0,3,6,10') { chordName = `${rootName}m7b5`; formulaName = "Semidisminuido"; }
+            else if (keyStr === '0,5,7') { chordName = `${rootName}sus4`; formulaName = "Suspendido 4"; }
+            else if (keyStr === '0,2,7') { chordName = `${rootName}sus2`; formulaName = "Suspendido 2"; }
+
+            displayEl.innerText = chordName;
+            detailsEl.innerText = `Tónica: ${rootName} | Fórmula: ${formulaName} | Notas: [${noteNamesList.join(', ')}]`;
         }
 
-        function triggerGenerate(moduleName) {
-            const out = document.getElementById('forge-output');
-            out.innerHTML += `\n[PRD-FORGE] Generando módulo '${moduleName}'...`;
-            setTimeout(() => {
-                out.innerHTML += `\n[PRD-FORGE] ¡Módulo '${moduleName}' generado exitosamente en generated/!`;
-                out.scrollTop = out.scrollHeight;
-            }, 1000);
-        }
-
-        // Web MIDI Browser Check
+        // Web MIDI Handler
         if (navigator.requestMIDIAccess) {
             navigator.requestMIDIAccess().then(
-                () => {
-                    document.getElementById('midi-status').innerHTML = '<i class="fas fa-check-circle text-emerald-400 mr-1"></i> Web MIDI Listo';
+                midi => {
+                    document.getElementById('midi-status').innerHTML = '<i class="fas fa-check-circle text-white mr-1"></i> Web MIDI Conectado';
+                    for (let input of midi.inputs.values()) {
+                        input.onmidimessage = (msg) => {
+                            const [cmd, note, vel] = msg.data;
+                            const type = cmd >> 4;
+                            if (type === 9 && vel > 0) {
+                                activeNotes.add(note);
+                                playNoteFreq(note);
+                            } else if (type === 8 || (type === 9 && vel === 0)) {
+                                activeNotes.delete(note);
+                            }
+                            updateChordDisplay();
+                        };
+                    }
                 },
                 () => {}
             );
         }
+
+        // Modals & Navigation
+        function switchTab(name) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-white', 'text-white');
+                el.classList.add('border-transparent', 'text-zinc-400');
+            });
+            document.getElementById(`tab-${name}`).classList.add('active');
+            const btn = document.getElementById(`btn-${name}`);
+            btn.classList.add('border-white', 'text-white');
+            btn.classList.remove('border-transparent', 'text-zinc-400');
+        }
+
+        function openZoomModal() { document.getElementById('zoom-modal').classList.add('active'); }
+        function closeZoomModal() { document.getElementById('zoom-modal').classList.remove('active'); }
+        function simulatePayment(prov) { alert(`Iniciando conexión bancaria segura con ${prov}...`); }
+        function triggerForge(mod) {
+            const el = document.getElementById('forge-log');
+            el.innerHTML += `\n[PRD-FORGE Engine] Generando módulo ${mod}... ¡OK!`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        // Initial chord display rendering
+        updateChordDisplay();
     </script>
 </body>
 </html>
