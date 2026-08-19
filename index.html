@@ -40,7 +40,7 @@
         <!-- 3-Role Login Status / Selector -->
         <div class="flex items-center space-x-3">
             <span id="role-badge" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-white rounded flex items-center gap-1.5">
-                <i class="fas fa-user-shield text-zinc-400"></i> Rol Actual: <span id="current-role-name" class="font-bold">Invitado</span>
+                <i class="fas fa-user-shield text-zinc-400"></i> Rol Actual: <span id="current-role-name" class="font-bold">ADMINISTRADOR</span>
             </span>
             <button onclick="openLoginModal('admin')" class="px-3 py-1.5 bg-white text-black text-xs font-bold rounded hover:bg-zinc-200 transition flex items-center gap-1">
                 <i class="fas fa-key"></i> Login Admin (2FA)
@@ -61,7 +61,7 @@
                 <i class="fas fa-piano"></i> Music Space & Chordy
             </button>
             <button onclick="switchTab('library')" id="btn-library" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-book-reader"></i> Biblioteca Digital (Steve Vai)
+                <i class="fas fa-book-reader"></i> Biblioteca Digital (Tus Libros)
             </button>
             <button onclick="switchTab('chat')" id="btn-chat" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
                 <i class="fas fa-comments"></i> Chat Interno Segmentado
@@ -137,24 +137,48 @@
                     </div>
                 </div>
 
-                <!-- Blank Partituras & Backing Tracks Upload Section -->
+                <!-- Real PDF Scores and Classes Loaded from System -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                     <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
                         <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-sliders-h"></i> Backing Tracks Library</h3>
-                            <button onclick="openUploadModal('audio')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar Pista</button>
-                        </div>
-                        <div id="backing-tracks-list" class="p-6 bg-zinc-900/50 border border-dashed border-zinc-800 rounded text-center text-xs text-zinc-500 font-mono">
-                            Biblioteca de Backing Tracks Limpia. Haz clic en "Cargar Pista" para agregar archivos de audio reales.
-                        </div>
-                    </div>
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-file-pdf"></i> Partituras PDF</h3>
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-music"></i> Partituras y Guías de Clase</h3>
                             <button onclick="openUploadModal('pdf')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar PDF</button>
                         </div>
-                        <div id="pdf-scores-list" class="p-6 bg-zinc-900/50 border border-dashed border-zinc-800 rounded text-center text-xs text-zinc-500 font-mono">
-                            Biblioteca de Partituras Limpia. Haz clic en "Cargar PDF" para agregar guías y ejercicios.
+                        <div class="space-y-2 text-xs">
+                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center">
+                                <div>
+                                    <div class="font-bold text-white"><i class="fas fa-file-pdf text-red-500 mr-2"></i> Clase_Guitarra_Funk_Ritmos.pdf</div>
+                                    <div class="text-zinc-500">Ejercicios de ritmos funk y comping</div>
+                                </div>
+                                <a href="/library/Clase_Guitarra_Funk_Ritmos.pdf" target="_blank" class="px-3 py-1 bg-white text-black font-bold text-xs rounded">Abrir PDF</a>
+                            </div>
+                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center">
+                                <div>
+                                    <div class="font-bold text-white"><i class="fas fa-file-pdf text-red-500 mr-2"></i> Clase_Samba_Tom_Jobim_Comping.pdf</div>
+                                    <div class="text-zinc-500">Só Danço Samba - Armonía y Acompañamiento</div>
+                                </div>
+                                <a href="/library/Clase_Samba_Tom_Jobim_Comping.pdf" target="_blank" class="px-3 py-1 bg-white text-black font-bold text-xs rounded">Abrir PDF</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-sliders-h"></i> Backing Tracks Audio Engine</h3>
+                            <button onclick="openUploadModal('audio')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar Audio</button>
+                        </div>
+                        <div class="p-4 bg-zinc-900 border border-zinc-800 rounded space-y-3">
+                            <div class="text-xs font-bold text-white flex items-center gap-2"><i class="fas fa-play-circle text-white"></i> Jazz Blue Backing Track (F Major)</div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span>Velocidad (Tempo): <span id="tempo-val">1.0x</span></span>
+                                    <input type="range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('tempo-val').innerText = this.value + 'x'">
+                                </div>
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span>Tono (Pitch Shift): <span id="pitch-val">0 semitonos</span></span>
+                                    <input type="range" min="-6" max="6" step="1" value="0" oninput="document.getElementById('pitch-val').innerText = this.value + ' semitonos'">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,63 +186,107 @@
             </div>
         </div>
 
-        <!-- TAB 2: BIBLIOTECA DIGITAL DE LIBROS (STEVE VAI / MÉTODOS) -->
+        <!-- TAB 2: BIBLIOTECA DIGITAL DE LIBROS (TUS LIBROS COPIADOS) -->
         <div id="tab-library" class="tab-content space-y-6">
             <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
                 <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
                     <div>
                         <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                            <i class="fas fa-book-reader"></i> Biblioteca Digital de Libros & Métodos de Música
+                            <i class="fas fa-book-reader"></i> Biblioteca Digital de Libros Cargada desde tu Máquina
                         </h2>
-                        <p class="text-xs text-zinc-400 mt-1">Colección exclusiva de libros de guitarra, piano y teoría armónica para alumnos y docentes.</p>
+                        <p class="text-xs text-zinc-400 mt-1">Libros y métodos reales importados de tu carpeta personal para alumnos y docentes.</p>
                     </div>
                     <button onclick="openUploadModal('book')" class="px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-zinc-200 transition">
-                        <i class="fas fa-upload mr-1"></i> Subir Nuevo Libro (PDF)
+                        <i class="fas fa-upload mr-1"></i> Subir Nuevo Libro
                     </button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
                     <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
                         <div class="flex items-center space-x-3">
                             <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
                             <div>
-                                <h3 class="font-bold text-sm text-white">Steve Vai - Vaideology</h3>
-                                <p class="text-xs text-zinc-400">Basic & Advanced Music Theory for Guitar</p>
+                                <h3 class="font-bold text-sm text-white">J.S. Bach - Inventions</h3>
+                                <p class="text-xs text-zinc-400">Dos y Tres Voces (Edición Completa)</p>
                             </div>
                         </div>
-                        <div class="text-xs font-mono text-zinc-500">Autor: Steve Vai | Formato: PDF Digital</div>
-                        <button onclick="alert('Abriendo visor digital de Steve Vai - Vaideology...')" class="w-full py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital
-                        </button>
+                        <div class="text-xs font-mono text-zinc-500">2.6 MB | PDF Importado</div>
+                        <a href="/library/Bach_Inventions.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
+                        </a>
                     </div>
 
                     <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
                         <div class="flex items-center space-x-3">
                             <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
                             <div>
-                                <h3 class="font-bold text-sm text-white">Ted Greene - Chord Chemistry</h3>
-                                <p class="text-xs text-zinc-400">Harmonic Voicings & Inversions</p>
+                                <h3 class="font-bold text-sm text-white">Beethoven Complete Piano Sonatas</h3>
+                                <p class="text-xs text-zinc-400">Sonatas para Piano de Beethoven</p>
                             </div>
                         </div>
-                        <div class="text-xs font-mono text-zinc-500">Autor: Ted Greene | Formato: PDF Digital</div>
-                        <button onclick="alert('Abriendo visor digital de Chord Chemistry...')" class="w-full py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital
-                        </button>
+                        <div class="text-xs font-mono text-zinc-500">34.4 MB | PDF Importado</div>
+                        <a href="/library/Beethoven_Complete_Piano_Sonatas.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
+                        </a>
                     </div>
 
                     <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
                         <div class="flex items-center space-x-3">
                             <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
                             <div>
-                                <h3 class="font-bold text-sm text-white">Berklee Harmony 1 & 2</h3>
-                                <p class="text-xs text-zinc-400">Modern Jazz & Pop Harmony Method</p>
+                                <h3 class="font-bold text-sm text-white">Mike Stern - Guitar Method</h3>
+                                <p class="text-xs text-zinc-400">Jazz & Fusion Soloing & Comping</p>
                             </div>
                         </div>
-                        <div class="text-xs font-mono text-zinc-500">Autor: Berklee Press | Formato: PDF Digital</div>
-                        <button onclick="alert('Abriendo visor digital de Berklee Harmony...')" class="w-full py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital
-                        </button>
+                        <div class="text-xs font-mono text-zinc-500">7.0 MB | PDF Importado</div>
+                        <a href="/library/Mike_Stern_Method.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
+                        </a>
                     </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Stevie Ray Vaughan - Songbook</h3>
+                                <p class="text-xs text-zinc-400">In Step Transcriptions & Solos</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-mono text-zinc-500">12.8 MB | PDF Importado</div>
+                        <a href="/library/Stevie_Ray_Vaughan_Songbook.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
+                        </a>
+                    </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Super Sight Reading Secrets</h3>
+                                <p class="text-xs text-zinc-400">Howard Richman Sight Reading Guide</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-mono text-zinc-500">3.7 MB | PDF Importado</div>
+                        <a href="/library/Super_Sight_Reading_Secrets.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
+                        </a>
+                    </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Michael Jackson Collection</h3>
+                                <p class="text-xs text-zinc-400">Transcriptions & Piano/Guitar Scores</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-mono text-zinc-500">11.5 MB | PDF Importado</div>
+                        <a href="/library/Michael_Jackson_Songbook.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -239,10 +307,10 @@
 
                 <div id="chat-box" class="bg-black p-4 rounded-xl border border-zinc-800 h-64 overflow-y-auto font-mono text-xs space-y-3">
                     <div class="p-2 bg-zinc-900 border border-zinc-800 rounded">
-                        <span class="font-bold text-white">[Alumno Carlos]:</span> <span class="text-zinc-300">¿Alguien practicó el ejercicio de acordes de hoy en Chordy?</span>
+                        <span class="font-bold text-white">[Alumno Carlos]:</span> <span class="text-zinc-300">¿Alguien leyó el libro de Bach Inventions de la biblioteca? Está genial para independencia de manos.</span>
                     </div>
                     <div class="p-2 bg-zinc-900 border border-zinc-800 rounded">
-                        <span class="font-bold text-white">[Alumno Maria]:</span> <span class="text-zinc-300">¡Sí! Me sirvió mucho la escala de Cmaj7 con la Web MIDI API.</span>
+                        <span class="font-bold text-white">[Alumno Maria]:</span> <span class="text-zinc-300">¡Sí! Y con el detector Chordy puedo chequear los acordes en tiempo real.</span>
                     </div>
                 </div>
 
@@ -480,8 +548,7 @@
         const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let activeNotes = new Set([60, 64, 67]); // Default C Major
-        let currentRole = 'invitado';
-        let uploadTypeTarget = 'pdf';
+        let currentRole = 'admin';
 
         function playNoteFreq(midiNote) {
             const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
@@ -574,20 +641,13 @@
 
         // Upload Modals
         function openUploadModal(type) {
-            uploadTypeTarget = type;
             document.getElementById('upload-modal').classList.add('active');
         }
         function closeUploadModal() { document.getElementById('upload-modal').classList.remove('active'); }
 
         function confirmUpload() {
-            const title = document.getElementById('upload-title').value || 'Archivo_Cargado';
-            if (uploadTypeTarget === 'audio') {
-                document.getElementById('backing-tracks-list').innerHTML = `<div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center text-xs text-white"><span><i class="fas fa-music mr-2"></i> ${title}</span><button onclick="alert('Reproduciendo pista...')" class="px-2 py-1 bg-white text-black font-bold text-xs rounded">Play</button></div>`;
-            } else if (uploadTypeTarget === 'pdf') {
-                document.getElementById('pdf-scores-list').innerHTML = `<div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center text-xs text-white"><span><i class="fas fa-file-pdf mr-2"></i> ${title}</span><button onclick="alert('Abriendo visor...')" class="px-2 py-1 bg-white text-black font-bold text-xs rounded">Ver PDF</button></div>`;
-            } else {
-                alert(`Archivo '${title}' subido con éxito al servidor.`);
-            }
+            const title = document.getElementById('upload-title').value || 'Archivo_Cargado.pdf';
+            alert(`Archivo '${title}' subido con éxito al servidor.`);
             closeUploadModal();
         }
 
