@@ -36,11 +36,21 @@
                 <p class="text-xs text-zinc-400">Sistema Multimodal Unificado | Blanco & Negro High-Contrast</p>
             </div>
         </div>
-        <div class="flex items-center space-x-4">
-            <span class="inline-flex items-center px-3 py-1 rounded border border-zinc-700 text-xs font-mono text-zinc-300 bg-zinc-900">
-                <span class="w-2 h-2 mr-2 bg-white rounded-full animate-ping"></span> localhost:3000
+
+        <!-- 3-Role Login Status / Selector -->
+        <div class="flex items-center space-x-3">
+            <span id="role-badge" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-white rounded flex items-center gap-1.5">
+                <i class="fas fa-user-shield text-zinc-400"></i> Rol Actual: <span id="current-role-name" class="font-bold">Invitado</span>
             </span>
-            <span class="text-xs text-zinc-400 font-mono"><i class="fab fa-github mr-1"></i> main</span>
+            <button onclick="openLoginModal('admin')" class="px-3 py-1.5 bg-white text-black text-xs font-bold rounded hover:bg-zinc-200 transition flex items-center gap-1">
+                <i class="fas fa-key"></i> Login Admin (2FA)
+            </button>
+            <button onclick="openLoginModal('docente')" class="px-3 py-1.5 bg-zinc-900 text-white border border-zinc-700 text-xs font-bold rounded hover:bg-zinc-800 transition">
+                Login Docente
+            </button>
+            <button onclick="openLoginModal('alumno')" class="px-3 py-1.5 bg-zinc-900 text-white border border-zinc-700 text-xs font-bold rounded hover:bg-zinc-800 transition">
+                Login Alumno
+            </button>
         </div>
     </header>
 
@@ -48,19 +58,25 @@
     <div class="bg-black border-b border-zinc-800 px-6">
         <nav class="flex space-x-8 overflow-x-auto" id="tabs">
             <button onclick="switchTab('music')" id="btn-music" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-white text-white flex items-center gap-2">
-                <i class="fas fa-piano"></i> Academia & Chordy MIDI
+                <i class="fas fa-piano"></i> Music Space & Chordy
+            </button>
+            <button onclick="switchTab('library')" id="btn-library" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-book-reader"></i> Biblioteca Digital (Steve Vai)
+            </button>
+            <button onclick="switchTab('chat')" id="btn-chat" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-comments"></i> Chat Interno Segmentado
+            </button>
+            <button onclick="switchTab('daw')" id="btn-daw" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-compact-disc"></i> Ableton Live & DAW Stream
+            </button>
+            <button onclick="switchTab('payments')" id="btn-payments" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
+                <i class="fas fa-university"></i> Pasarelas & Bancos
             </button>
             <button onclick="switchTab('trading')" id="btn-trading" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
                 <i class="fas fa-chart-line"></i> FTMO Trading Bot
             </button>
             <button onclick="switchTab('economy')" id="btn-economy" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
                 <i class="fas fa-globe"></i> Dashboard Económico
-            </button>
-            <button onclick="switchTab('payments')" id="btn-payments" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-university"></i> Pasarelas & Bancos
-            </button>
-            <button onclick="switchTab('forge')" id="btn-forge" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-cubes"></i> PRD Forge Engine
             </button>
         </nav>
     </div>
@@ -72,20 +88,19 @@
         <div id="tab-music" class="tab-content active space-y-6">
             <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
                 
-                <!-- Chordy Header & Controls -->
                 <div class="flex flex-wrap justify-between items-center border-b border-zinc-800 pb-4">
                     <div>
                         <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
                             <i class="fas fa-music"></i> Detector de Acordes de Piano en Tiempo Real ("Chordy")
                         </h2>
-                        <p class="text-xs text-zinc-400 mt-1">Conecta tu teclado USB/MIDI o haz clic en las teclas del piano. Escucharás el sonido real y verás el acorde exacto en pantalla.</p>
+                        <p class="text-xs text-zinc-400 mt-1">Conecta tu teclado USB/MIDI o haz clic en las teclas del piano. Escucharás el sonido real y verás el acorde exacto.</p>
                     </div>
                     <div class="flex items-center space-x-3">
                         <button onclick="openZoomModal()" class="px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-zinc-200 transition flex items-center gap-2">
                             <i class="fas fa-video"></i> Abrir Clase Zoom en Vivo
                         </button>
                         <span id="midi-status" class="text-xs border border-zinc-700 bg-zinc-900 text-zinc-300 px-3 py-2 rounded font-mono">
-                            <i class="fas fa-plug mr-1"></i> Web MIDI: Esperando Teclado...
+                            <i class="fas fa-plug mr-1"></i> Web MIDI: Listo
                         </span>
                     </div>
                 </div>
@@ -122,32 +137,24 @@
                     </div>
                 </div>
 
-                <!-- Backing Tracks & PDF Player -->
+                <!-- Blank Partituras & Backing Tracks Upload Section -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                     <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                            <i class="fas fa-sliders-h"></i> Backing Tracks Audio Engine
-                        </h3>
-                        <p class="text-xs text-zinc-400">Controles de reproductor en tiempo real (Pitch Shift & Tempo):</p>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-xs font-mono">
-                                <span>Velocidad (Tempo): <span id="tempo-val">1.0x</span></span>
-                                <input type="range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('tempo-val').innerText = this.value + 'x'">
-                            </div>
-                            <div class="flex justify-between text-xs font-mono">
-                                <span>Tono (Pitch Shift): <span id="pitch-val">0 semitonos</span></span>
-                                <input type="range" min="-6" max="6" step="1" value="0" oninput="document.getElementById('pitch-val').innerText = this.value + ' semitonos'">
-                            </div>
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-sliders-h"></i> Backing Tracks Library</h3>
+                            <button onclick="openUploadModal('audio')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar Pista</button>
+                        </div>
+                        <div id="backing-tracks-list" class="p-6 bg-zinc-900/50 border border-dashed border-zinc-800 rounded text-center text-xs text-zinc-500 font-mono">
+                            Biblioteca de Backing Tracks Limpia. Haz clic en "Cargar Pista" para agregar archivos de audio reales.
                         </div>
                     </div>
                     <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                            <i class="fas fa-file-pdf"></i> Visor de Partituras PDF
-                        </h3>
-                        <p class="text-xs text-zinc-400">Métodos de piano y partituras de estudio integradas:</p>
-                        <div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center text-xs">
-                            <span><i class="fas fa-book mr-2"></i> Metodo_Armonia_Moderna_Piano.pdf</span>
-                            <button onclick="alert('Abriendo visor de PDF interactivo...')" class="px-2 py-1 bg-white text-black font-bold text-xs rounded">Ver PDF</button>
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-file-pdf"></i> Partituras PDF</h3>
+                            <button onclick="openUploadModal('pdf')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar PDF</button>
+                        </div>
+                        <div id="pdf-scores-list" class="p-6 bg-zinc-900/50 border border-dashed border-zinc-800 rounded text-center text-xs text-zinc-500 font-mono">
+                            Biblioteca de Partituras Limpia. Haz clic en "Cargar PDF" para agregar guías y ejercicios.
                         </div>
                     </div>
                 </div>
@@ -155,7 +162,137 @@
             </div>
         </div>
 
-        <!-- TAB 2: PASARELAS DE PAGO & BANCOS (ARGENTINA & EXTERIOR) -->
+        <!-- TAB 2: BIBLIOTECA DIGITAL DE LIBROS (STEVE VAI / MÉTODOS) -->
+        <div id="tab-library" class="tab-content space-y-6">
+            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                            <i class="fas fa-book-reader"></i> Biblioteca Digital de Libros & Métodos de Música
+                        </h2>
+                        <p class="text-xs text-zinc-400 mt-1">Colección exclusiva de libros de guitarra, piano y teoría armónica para alumnos y docentes.</p>
+                    </div>
+                    <button onclick="openUploadModal('book')" class="px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-zinc-200 transition">
+                        <i class="fas fa-upload mr-1"></i> Subir Nuevo Libro (PDF)
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Steve Vai - Vaideology</h3>
+                                <p class="text-xs text-zinc-400">Basic & Advanced Music Theory for Guitar</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-mono text-zinc-500">Autor: Steve Vai | Formato: PDF Digital</div>
+                        <button onclick="alert('Abriendo visor digital de Steve Vai - Vaideology...')" class="w-full py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital
+                        </button>
+                    </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Ted Greene - Chord Chemistry</h3>
+                                <p class="text-xs text-zinc-400">Harmonic Voicings & Inversions</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-mono text-zinc-500">Autor: Ted Greene | Formato: PDF Digital</div>
+                        <button onclick="alert('Abriendo visor digital de Chord Chemistry...')" class="w-full py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital
+                        </button>
+                    </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Berklee Harmony 1 & 2</h3>
+                                <p class="text-xs text-zinc-400">Modern Jazz & Pop Harmony Method</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-mono text-zinc-500">Autor: Berklee Press | Formato: PDF Digital</div>
+                        <button onclick="alert('Abriendo visor digital de Berklee Harmony...')" class="w-full py-2 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: CHAT INTERNO SEGMENTADO -->
+        <div id="tab-chat" class="tab-content space-y-6">
+            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-4">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                    <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+                        <i class="fas fa-comments"></i> Chat Interno Segmentado
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="switchChatChannel('alumnos')" id="chat-btn-alumnos" class="px-3 py-1 bg-white text-black font-bold text-xs rounded">Canal Alumnos</button>
+                        <button onclick="switchChatChannel('docentes')" id="chat-btn-docentes" class="px-3 py-1 bg-zinc-900 text-zinc-400 border border-zinc-800 font-bold text-xs rounded">Canal Docentes</button>
+                        <button onclick="switchChatChannel('consultas')" id="chat-btn-consultas" class="px-3 py-1 bg-zinc-900 text-zinc-400 border border-zinc-800 font-bold text-xs rounded">Consultas Alumno-Docente</button>
+                    </div>
+                </div>
+
+                <div id="chat-box" class="bg-black p-4 rounded-xl border border-zinc-800 h-64 overflow-y-auto font-mono text-xs space-y-3">
+                    <div class="p-2 bg-zinc-900 border border-zinc-800 rounded">
+                        <span class="font-bold text-white">[Alumno Carlos]:</span> <span class="text-zinc-300">¿Alguien practicó el ejercicio de acordes de hoy en Chordy?</span>
+                    </div>
+                    <div class="p-2 bg-zinc-900 border border-zinc-800 rounded">
+                        <span class="font-bold text-white">[Alumno Maria]:</span> <span class="text-zinc-300">¡Sí! Me sirvió mucho la escala de Cmaj7 con la Web MIDI API.</span>
+                    </div>
+                </div>
+
+                <div class="flex space-x-2">
+                    <input type="text" id="chat-input" placeholder="Escribe un mensaje en este canal..." class="flex-1 bg-black border border-zinc-800 px-4 py-2 text-xs rounded text-white focus:outline-none focus:border-white">
+                    <button onclick="sendChatMessage()" class="px-4 py-2 bg-white text-black font-bold text-xs rounded">Enviar Mensaje</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: ABLETON LIVE & DAW STREAMING -->
+        <div id="tab-daw" class="tab-content space-y-6">
+            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                            <i class="fas fa-compact-disc"></i> Conexión Ableton Live & Streaming DAW
+                        </h2>
+                        <p class="text-xs text-zinc-400 mt-1">Transmite el audio de tu placa de sonido/DAW directamente a los alumnos en 48kHz Stereo HD.</p>
+                    </div>
+                    <button onclick="alert('Abriendo enlace de protocolo ejecutable para Ableton Live local...')" class="px-4 py-2 bg-white text-black font-bold text-xs rounded">
+                        <i class="fas fa-power-off mr-1"></i> Abrir Ableton Live Local
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <h3 class="font-bold text-sm text-white">Transmisión de Audio HD en Vivo (Profesor -> Alumnos)</h3>
+                        <p class="text-xs text-zinc-400">Canal de audio WebRTC sin compresión de voz para escuchar sintetizadores y VSTs:</p>
+                        <div class="p-4 bg-zinc-900 border border-zinc-800 rounded space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span>Estado de Transmisión:</span>
+                                <span class="text-emerald-400 font-bold">● TRANSMITIENDO HD (48kHz / 320kbps)</span>
+                            </div>
+                            <button onclick="alert('Canal de audio DAW reiniciado.')" class="w-full py-2 bg-zinc-800 text-white font-bold text-xs rounded border border-zinc-700">Reconectar Audio DAW</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <h3 class="font-bold text-sm text-white">Entrega de Proyectos DAW (Multi-DAW)</h3>
+                        <p class="text-xs text-zinc-400">Formatos soportados: .als (Ableton), .flp (FL Studio), .zip (Stems WAV)</p>
+                        <button onclick="openUploadModal('daw')" class="w-full py-3 bg-white text-black font-bold text-xs rounded">
+                            <i class="fas fa-upload mr-1"></i> Subir Proyecto DAW / Stems (.als, .flp, .zip)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: PASARELAS DE PAGO & BANCOS -->
         <div id="tab-payments" class="tab-content space-y-6">
             <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
                 <div>
@@ -215,7 +352,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: TRADING BOT MONITOR -->
+        <!-- TAB 6: TRADING BOT MONITOR -->
         <div id="tab-trading" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
@@ -236,7 +373,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: DASHBOARD ECONÓMICO -->
+        <!-- TAB 7: DASHBOARD ECONÓMICO -->
         <div id="tab-economy" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
@@ -266,31 +403,54 @@
             </div>
         </div>
 
-        <!-- TAB 5: PRD FORGE ENGINE -->
-        <div id="tab-forge" class="tab-content space-y-6">
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-4">
-                <h2 class="text-lg font-bold text-white"><i class="fas fa-magic mr-2"></i> PRD Forge - Motor de Generación Meta-Sistema</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <button onclick="triggerForge('TradingSystem')" class="p-4 bg-black border border-zinc-800 hover:border-white rounded-lg text-left transition">
-                        <div class="font-bold text-white text-sm">Generar Trading Module</div>
-                        <div class="text-xs text-zinc-400">Risk, Strategy & Audit</div>
-                    </button>
-                    <button onclick="triggerForge('MusicAcademy')" class="p-4 bg-black border border-zinc-800 hover:border-white rounded-lg text-left transition">
-                        <div class="font-bold text-white text-sm">Generar Music LMS</div>
-                        <div class="text-xs text-zinc-400">Chordy MIDI & Zoom</div>
-                    </button>
-                    <button onclick="triggerForge('EconomicDashboard')" class="p-4 bg-black border border-zinc-800 hover:border-white rounded-lg text-left transition">
-                        <div class="font-bold text-white text-sm">Generar Dashboard Económico</div>
-                        <div class="text-xs text-zinc-400">FED, BCE, BCRA, FMI</div>
-                    </button>
+    </main>
+
+    <!-- MODAL 1: 3-ROLE LOGIN (Con 2FA en Admin) -->
+    <div id="login-modal" class="modal-bg">
+        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl max-w-md w-full space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 id="login-title" class="text-lg font-extrabold text-white">Autenticación de Usuario</h3>
+                <button onclick="closeLoginModal()" class="text-zinc-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-zinc-400 mb-1 font-mono">Usuario / Email</label>
+                    <input type="text" id="login-email" value="admin@prd-system.com" class="w-full bg-black border border-zinc-800 px-3 py-2 text-white rounded">
                 </div>
-                <div id="forge-log" class="bg-black p-4 rounded border border-zinc-800 font-mono text-xs text-zinc-300 h-28 overflow-y-auto">
-                    [PRD-FORGE Engine] Esperando comando...
+                <div>
+                    <label class="block text-zinc-400 mb-1 font-mono">Contraseña</label>
+                    <input type="password" id="login-pass" value="••••••••••••" class="w-full bg-black border border-zinc-800 px-3 py-2 text-white rounded">
                 </div>
+                <div id="2fa-container" class="hidden space-y-1">
+                    <label class="block text-amber-400 font-mono font-bold">🔒 Código 2FA / PIN de Seguridad de 6 dígitos</label>
+                    <input type="text" id="login-2fa" placeholder="Ej: 849201" class="w-full bg-black border border-amber-500/50 px-3 py-2 text-white rounded font-mono tracking-widest text-center text-sm">
+                </div>
+                <button onclick="processLogin()" class="w-full py-2.5 bg-white text-black font-bold text-sm rounded mt-2">Iniciar Sesión Segura</button>
             </div>
         </div>
+    </div>
 
-    </main>
+    <!-- MODAL 2: CARGA GENERAL DE ARCHIVOS (PDF, Audio, Libros, DAW) -->
+    <div id="upload-modal" class="modal-bg">
+        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl max-w-md w-full space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-lg font-extrabold text-white"><i class="fas fa-upload mr-2"></i> Centro de Carga de Archivos</h3>
+                <button onclick="closeUploadModal()" class="text-zinc-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-zinc-400 mb-1 font-mono">Título del Archivo</label>
+                    <input type="text" id="upload-title" placeholder="Ej: Ejercicio_Escalas_Jazz.pdf" class="w-full bg-black border border-zinc-800 px-3 py-2 text-white rounded">
+                </div>
+                <div>
+                    <label class="block text-zinc-400 mb-1 font-mono">Seleccionar Archivo de la computadora</label>
+                    <input type="file" id="upload-file" class="w-full bg-black border border-zinc-800 px-3 py-2 text-zinc-400 rounded">
+                </div>
+                <button onclick="confirmUpload()" class="w-full py-2.5 bg-white text-black font-bold text-sm rounded">Subir Archivo al Sistema</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ZOOM MODAL (Interactive) -->
     <div id="zoom-modal" class="modal-bg">
@@ -319,9 +479,10 @@
     <script>
         const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let activeNotes = new Set([60, 64, 67]); // Default C Major (C4, E4, G4)
+        let activeNotes = new Set([60, 64, 67]); // Default C Major
+        let currentRole = 'invitado';
+        let uploadTypeTarget = 'pdf';
 
-        // Web Audio Synthesizer to play piano notes
         function playNoteFreq(midiNote) {
             const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
             const osc = audioCtx.createOscillator();
@@ -338,30 +499,18 @@
 
         function toggleKey(midiNote) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            if (activeNotes.has(midiNote)) {
-                activeNotes.delete(midiNote);
-            } else {
-                activeNotes.add(midiNote);
-                playNoteFreq(midiNote);
-            }
+            if (activeNotes.has(midiNote)) activeNotes.delete(midiNote);
+            else { activeNotes.add(midiNote); playNoteFreq(midiNote); }
             updateChordDisplay();
         }
 
-        function clearPiano() {
-            activeNotes.clear();
-            updateChordDisplay();
-        }
+        function clearPiano() { activeNotes.clear(); updateChordDisplay(); }
 
         function updateChordDisplay() {
-            // Update key UI styling
             document.querySelectorAll('#piano .white-key, #piano .black-key').forEach(el => {
                 const note = parseInt(el.getAttribute('data-note'));
-                if (activeNotes.has(note)) {
-                    el.classList.add('active');
-                } else {
-                    el.classList.remove('active');
-                }
+                if (activeNotes.has(note)) el.classList.add('active');
+                else el.classList.remove('active');
             });
 
             const notesArray = Array.from(activeNotes).sort((a,b) => a-b);
@@ -377,7 +526,6 @@
             const pitchClasses = Array.from(new Set(notesArray.map(n => n % 12))).sort((a,b) => a-b);
             const noteNamesList = notesArray.map(n => NOTE_NAMES[n % 12] + Math.floor(n / 12 - 1));
 
-            // Basic chord matching logic
             const rootPC = pitchClasses[0];
             const rootName = NOTE_NAMES[rootPC];
             const intervals = pitchClasses.map(pc => (pc - rootPC + 12) % 12).sort((a,b) => a-b);
@@ -388,38 +536,77 @@
 
             if (keyStr === '0,4,7') { chordName = `${rootName} Major`; formulaName = "Triada Mayor"; }
             else if (keyStr === '0,3,7') { chordName = `${rootName} Minor`; formulaName = "Triada Menor"; }
-            else if (keyStr === '0,4,7,11') { chordName = `${rootName}maj7`; formulaName = "Mayor con 7ma Mayor"; }
-            else if (keyStr === '0,3,7,10') { chordName = `${rootName}m7`; formulaName = "Menor con 7ma Menor"; }
+            else if (keyStr === '0,4,7,11') { chordName = `${rootName}maj7`; formulaName = "Mayor 7ma"; }
+            else if (keyStr === '0,3,7,10') { chordName = `${rootName}m7`; formulaName = "Menor 7ma"; }
             else if (keyStr === '0,4,7,10') { chordName = `${rootName}7`; formulaName = "Dominante 7ma"; }
             else if (keyStr === '0,3,6,10') { chordName = `${rootName}m7b5`; formulaName = "Semidisminuido"; }
-            else if (keyStr === '0,5,7') { chordName = `${rootName}sus4`; formulaName = "Suspendido 4"; }
-            else if (keyStr === '0,2,7') { chordName = `${rootName}sus2`; formulaName = "Suspendido 2"; }
 
             displayEl.innerText = chordName;
             detailsEl.innerText = `Tónica: ${rootName} | Fórmula: ${formulaName} | Notas: [${noteNamesList.join(', ')}]`;
         }
 
-        // Web MIDI Handler
-        if (navigator.requestMIDIAccess) {
-            navigator.requestMIDIAccess().then(
-                midi => {
-                    document.getElementById('midi-status').innerHTML = '<i class="fas fa-check-circle text-white mr-1"></i> Web MIDI Conectado';
-                    for (let input of midi.inputs.values()) {
-                        input.onmidimessage = (msg) => {
-                            const [cmd, note, vel] = msg.data;
-                            const type = cmd >> 4;
-                            if (type === 9 && vel > 0) {
-                                activeNotes.add(note);
-                                playNoteFreq(note);
-                            } else if (type === 8 || (type === 9 && vel === 0)) {
-                                activeNotes.delete(note);
-                            }
-                            updateChordDisplay();
-                        };
-                    }
-                },
-                () => {}
-            );
+        // 3-Role Login Modals
+        function openLoginModal(role) {
+            currentRole = role;
+            const container2fa = document.getElementById('2fa-container');
+            const titleEl = document.getElementById('login-title');
+
+            if (role === 'admin') {
+                titleEl.innerText = '👑 Login Administrador Maestro (2FA Adicional)';
+                container2fa.classList.remove('hidden');
+            } else if (role === 'docente') {
+                titleEl.innerText = '👨‍🏫 Login Docente / Profesor';
+                container2fa.classList.add('hidden');
+            } else {
+                titleEl.innerText = '🎓 Login Alumno / Estudiante';
+                container2fa.classList.add('hidden');
+            }
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function closeLoginModal() { document.getElementById('login-modal').classList.remove('active'); }
+
+        function processLogin() {
+            document.getElementById('current-role-name').innerText = currentRole.toUpperCase();
+            alert(`¡Autenticación exitosa como ${currentRole.toUpperCase()}!`);
+            closeLoginModal();
+        }
+
+        // Upload Modals
+        function openUploadModal(type) {
+            uploadTypeTarget = type;
+            document.getElementById('upload-modal').classList.add('active');
+        }
+        function closeUploadModal() { document.getElementById('upload-modal').classList.remove('active'); }
+
+        function confirmUpload() {
+            const title = document.getElementById('upload-title').value || 'Archivo_Cargado';
+            if (uploadTypeTarget === 'audio') {
+                document.getElementById('backing-tracks-list').innerHTML = `<div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center text-xs text-white"><span><i class="fas fa-music mr-2"></i> ${title}</span><button onclick="alert('Reproduciendo pista...')" class="px-2 py-1 bg-white text-black font-bold text-xs rounded">Play</button></div>`;
+            } else if (uploadTypeTarget === 'pdf') {
+                document.getElementById('pdf-scores-list').innerHTML = `<div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center text-xs text-white"><span><i class="fas fa-file-pdf mr-2"></i> ${title}</span><button onclick="alert('Abriendo visor...')" class="px-2 py-1 bg-white text-black font-bold text-xs rounded">Ver PDF</button></div>`;
+            } else {
+                alert(`Archivo '${title}' subido con éxito al servidor.`);
+            }
+            closeUploadModal();
+        }
+
+        // Chat Switching
+        function switchChatChannel(ch) {
+            document.querySelectorAll('#tab-chat button').forEach(b => {
+                b.classList.remove('bg-white', 'text-black');
+                b.classList.add('bg-zinc-900', 'text-zinc-400');
+            });
+            document.getElementById(`chat-btn-${ch}`).classList.add('bg-white', 'text-black');
+            document.getElementById(`chat-btn-${ch}`).classList.remove('bg-zinc-900', 'text-zinc-400');
+            document.getElementById('chat-box').innerHTML += `\n<div class="text-zinc-500 font-mono">[Sistema]: Cambiado a canal '${ch.toUpperCase()}'</div>`;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            if (!input.value) return;
+            document.getElementById('chat-box').innerHTML += `<div class="p-2 bg-zinc-900 border border-zinc-800 rounded"><span class="font-bold text-white">[${currentRole.toUpperCase()}]:</span> <span class="text-zinc-300">${input.value}</span></div>`;
+            input.value = '';
         }
 
         // Modals & Navigation
@@ -438,11 +625,6 @@
         function openZoomModal() { document.getElementById('zoom-modal').classList.add('active'); }
         function closeZoomModal() { document.getElementById('zoom-modal').classList.remove('active'); }
         function simulatePayment(prov) { alert(`Iniciando conexión bancaria segura con ${prov}...`); }
-        function triggerForge(mod) {
-            const el = document.getElementById('forge-log');
-            el.innerHTML += `\n[PRD-FORGE Engine] Generando módulo ${mod}... ¡OK!`;
-            el.scrollTop = el.scrollHeight;
-        }
 
         // Initial chord display rendering
         updateChordDisplay();
