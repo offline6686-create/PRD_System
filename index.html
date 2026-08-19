@@ -1,90 +1,276 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>PRD System</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0d0d0d;
-      color: white;
-      margin: 0;
-    }
-
-    header {
-      background: #111;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    .folder {
-      cursor: pointer;
-      margin: 5px 0;
-    }
-
-    .children {
-      margin-left: 20px;
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRD System - Portal Unificado Localhost</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .white-key { width: 40px; height: 160px; background: white; border: 1px solid #ccc; display: inline-block; position: relative; border-radius: 0 0 5px 5px; cursor: pointer; }
+        .white-key.active { background: #3b82f6 !important; }
+        .black-key { width: 24px; height: 100px; background: #1e293b; display: inline-block; margin-left: -12px; margin-right: -12px; z-index: 10; position: relative; border-radius: 0 0 4px 4px; cursor: pointer; }
+        .black-key.active { background: #60a5fa !important; }
+    </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
-<header>🚀 PRD System Explorer</header>
+    <!-- Header / Navbar -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-600 p-2 rounded-lg text-white font-bold">PRD</div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">PRD System Localhost Portal</h1>
+                <p class="text-xs text-slate-400">Sistema Multimodal Unificado & PRD Forge Core</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-2 h-2 mr-2 bg-emerald-400 rounded-full animate-pulse"></span> Localhost Online (:3000)
+            </span>
+            <span class="text-xs text-slate-400"><i class="fab fa-github mr-1"></i> main branch</span>
+        </div>
+    </header>
 
-<div class="container" id="explorer"></div>
+    <!-- Main Navigation Tabs -->
+    <div class="bg-slate-900/50 border-b border-slate-800 px-6">
+        <nav class="flex space-x-6 overflow-x-auto" id="tabs">
+            <button onclick="switchTab('forge')" id="btn-forge" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-500 text-blue-400 flex items-center gap-2">
+                <i class="fas fa-cubes"></i> PRD Forge (1-Click)
+            </button>
+            <button onclick="switchTab('trading')" id="btn-trading" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                <i class="fas fa-chart-line"></i> FTMO Trading Bot
+            </button>
+            <button onclick="switchTab('economy')" id="btn-economy" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                <i class="fas fa-globe"></i> Dashboard Económico
+            </button>
+            <button onclick="switchTab('music')" id="btn-music" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                <i class="fas fa-music"></i> Music Space + Chordy MIDI
+            </button>
+            <button onclick="switchTab('personal')" id="btn-personal" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                <i class="fas fa-tasks"></i> Personal & Ecommerce
+            </button>
+        </nav>
+    </div>
 
-<script>
-const prd = {
-  "01_ENTORNO": ["docker", "config"],
-  "02_PROYECTOS": ["trading", "music"],
-  "08_CORE_SYSTEM": {
-    "prd-forge": ["modules", "engine", "templates"]
-  }
-};
+    <!-- Content Body -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
 
-function createNode(name, value) {
-  const div = document.createElement("div");
-  div.className = "folder";
-  div.innerText = "📁 " + name;
+        <!-- TAB 1: PRD FORGE -->
+        <div id="tab-forge" class="tab-content active space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-100"><i class="fas fa-magic text-blue-500 mr-2"></i> PRD Forge - Generador Meta-Sistema</h2>
+                        <p class="text-sm text-slate-400">Genera proyectos enteros (Frontend, Backend, DB, Docker, Auth) con un solo clic.</p>
+                    </div>
+                    <span class="bg-blue-500/10 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-500/20">System Engine v1.0</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <button onclick="triggerGenerate('TradingSystem')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
+                        <div class="text-blue-400 text-xl mb-2"><i class="fas fa-robot"></i></div>
+                        <div class="font-semibold text-sm">Generar Trading Bot</div>
+                        <div class="text-xs text-slate-400">Strategy, Risk & Audit</div>
+                    </button>
+                    <button onclick="triggerGenerate('EconomicDashboard')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
+                        <div class="text-emerald-400 text-xl mb-2"><i class="fas fa-landmark"></i></div>
+                        <div class="font-semibold text-sm">Generar Dashboard Económico</div>
+                        <div class="text-xs text-slate-400">FED, BCE, BCRA & FMI</div>
+                    </button>
+                    <button onclick="triggerGenerate('MusicAcademy')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
+                        <div class="text-purple-400 text-xl mb-2"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="font-semibold text-sm">Generar Academia de Música</div>
+                        <div class="text-xs text-slate-400">LMS, Zoom & Chordy</div>
+                    </button>
+                    <button onclick="triggerGenerate('EcommerceModule')" class="p-4 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition">
+                        <div class="text-amber-400 text-xl mb-2"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="font-semibold text-sm">Generar E-commerce</div>
+                        <div class="text-xs text-slate-400">Stripe & MercadoPago</div>
+                    </button>
+                </div>
+                <div id="forge-output" class="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs text-emerald-400 h-32 overflow-y-auto">
+                    [PRD-FORGE Engine] Esperando orden de generación...
+                </div>
+            </div>
+        </div>
 
-  const childrenDiv = document.createElement("div");
-  childrenDiv.className = "children";
+        <!-- TAB 2: TRADING BOT -->
+        <div id="tab-trading" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                    <div class="text-xs text-slate-400 font-medium mb-1">Balance Actual (FTMO)</div>
+                    <div class="text-2xl font-bold text-emerald-400">$101,450.00 USD</div>
+                    <div class="text-xs text-emerald-500 mt-1"><i class="fas fa-arrow-up"></i> +1.45% de retorno</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                    <div class="text-xs text-slate-400 font-medium mb-1">Drawdown Diario Actual</div>
+                    <div class="text-2xl font-bold text-blue-400">0.85%</div>
+                    <div class="text-xs text-slate-400 mt-1">Límite FTMO: Max 5.0% (Buffer 4.5%)</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                    <div class="text-xs text-slate-400 font-medium mb-1">Firma Criptográfica SHA-256</div>
+                    <div class="text-xs font-mono text-slate-300 truncate">a3f9e81b2c4d5e6f7a8b9c0d1e2f3a4b...</div>
+                    <div class="text-xs text-emerald-400 mt-1"><i class="fas fa-shield-alt"></i> Auditoría inmutable OK</div>
+                </div>
+            </div>
+        </div>
 
-  div.onclick = () => {
-    childrenDiv.style.display =
-      childrenDiv.style.display === "none" ? "block" : "none";
-  };
+        <!-- TAB 3: DASHBOARD ECONÓMICO -->
+        <div id="tab-economy" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                    <div class="text-xs text-blue-400 font-bold mb-1">🇺🇸 FED (Reserva Federal)</div>
+                    <div class="text-xl font-bold">4.25% - 4.50%</div>
+                    <div class="text-xs text-slate-400">Tasa de Fondos Federales</div>
+                    <div class="mt-2 text-xs text-slate-300">Inflación CPI: <span class="text-emerald-400 font-semibold">2.4% YoY</span></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                    <div class="text-xs text-amber-400 font-bold mb-1">🇪🇺 BCE (Banco Central Europeo)</div>
+                    <div class="text-xl font-bold">3.00%</div>
+                    <div class="text-xs text-slate-400">Tasa Refi Eurozona</div>
+                    <div class="mt-2 text-xs text-slate-300">Inflación HICP: <span class="text-emerald-400 font-semibold">2.1% YoY</span></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                    <div class="text-xs text-emerald-400 font-bold mb-1">🇦🇷 BCRA (Argentina)</div>
+                    <div class="text-xl font-bold">$31,000 M USD</div>
+                    <div class="text-xs text-slate-400">Reservas Internacionales</div>
+                    <div class="mt-2 text-xs text-slate-300">IPC Mensual: <span class="text-amber-400 font-semibold">2.1%</span></div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                    <div class="text-xs text-purple-400 font-bold mb-1">🌐 FMI (Proyección PIB)</div>
+                    <div class="text-xl font-bold">+3.2% Global</div>
+                    <div class="text-xs text-slate-400">Crecimiento estimado</div>
+                    <div class="mt-2 text-xs text-slate-300">EE.UU: +2.6% | Arg: +5.0%</div>
+                </div>
+            </div>
+        </div>
 
-  if (Array.isArray(value)) {
-    value.forEach(item => {
-      const child = document.createElement("div");
-      child.innerText = "📄 " + item;
-      childrenDiv.appendChild(child);
-    });
-  } else if (typeof value === "object") {
-    for (let key in value) {
-      childrenDiv.appendChild(createNode(key, value[key]));
-    }
-  }
+        <!-- TAB 4: MUSIC SPACE + CHORDY MIDI -->
+        <div id="tab-music" class="tab-content space-y-6">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-6">
+                <div class="flex flex-wrap justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-purple-300"><i class="fas fa-piano text-purple-400 mr-2"></i> Music Space - Detector de Acordes MIDI ("Chordy")</h2>
+                        <p class="text-xs text-slate-400">Conecta tu teclado USB/MIDI para ver los acordes en tiempo real.</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="midi-status" class="text-xs bg-purple-500/10 text-purple-400 border border-purple-500/20 px-3 py-1 rounded-full">
+                            <i class="fas fa-plug mr-1"></i> Esperando dispositivo MIDI...
+                        </span>
+                    </div>
+                </div>
 
-  const wrapper = document.createElement("div");
-  wrapper.appendChild(div);
-  wrapper.appendChild(childrenDiv);
+                <!-- Live Chord Display -->
+                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 text-center">
+                    <div class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Acorde Detectado en Tiempo Real</div>
+                    <div id="detected-chord" class="text-5xl font-black text-purple-400 my-2">Cmaj7</div>
+                    <div id="chord-formula" class="text-sm text-slate-400">Tónica: C | Fórmula: Major 7th | Notas: [C, E, G, B]</div>
+                </div>
 
-  return wrapper;
-}
+                <!-- Virtual Piano Visualizer -->
+                <div class="flex justify-center overflow-x-auto py-4 bg-slate-950 rounded-xl border border-slate-800">
+                    <div class="flex relative select-none" id="piano-keyboard">
+                        <div class="white-key active" data-note="60"></div>
+                        <div class="black-key" data-note="61"></div>
+                        <div class="white-key" data-note="62"></div>
+                        <div class="black-key" data-note="63"></div>
+                        <div class="white-key active" data-note="64"></div>
+                        <div class="white-key" data-note="65"></div>
+                        <div class="black-key" data-note="66"></div>
+                        <div class="white-key active" data-note="67"></div>
+                        <div class="black-key" data-note="68"></div>
+                        <div class="white-key" data-note="69"></div>
+                        <div class="black-key" data-note="70"></div>
+                        <div class="white-key active" data-note="71"></div>
+                    </div>
+                </div>
 
-const explorer = document.getElementById("explorer");
+                <!-- Extra Music Academy Services -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <div class="text-sm font-semibold text-slate-200 mb-1"><i class="fas fa-video text-blue-400 mr-2"></i> Clases Zoom en Vivo</div>
+                        <div class="text-xs text-slate-400">Salas integradas con credenciales JWT automáticas.</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <div class="text-sm font-semibold text-slate-200 mb-1"><i class="fas fa-sliders-h text-amber-400 mr-2"></i> Backing Tracks Audio Engine</div>
+                        <div class="text-xs text-slate-400">Pitch Shift (cambio de tono) y Tempo Control sin deformar audio.</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <div class="text-sm font-semibold text-slate-200 mb-1"><i class="credit-card text-emerald-400 mr-2"></i> Pasarelas de Pago</div>
+                        <div class="text-xs text-slate-400">Stripe Checkout + MercadoPago Checkout Pro integrados.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-for (let key in prd) {
-  explorer.appendChild(createNode(key, prd[key]));
-}
-</script>
+        <!-- TAB 5: PERSONAL & ECOMMERCE -->
+        <div id="tab-personal" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                    <h3 class="font-bold text-slate-200 mb-3"><i class="fas fa-tasks text-blue-400 mr-2"></i> Tareas Personales</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="p-2 bg-slate-800/50 rounded flex justify-between"><span>FTMO Bot en Demo</span><span class="text-emerald-400 text-xs font-semibold">Completada</span></li>
+                        <li class="p-2 bg-slate-800/50 rounded flex justify-between"><span>Probar Detector MIDI con Piano USB</span><span class="text-blue-400 text-xs font-semibold">En Proceso</span></li>
+                        <li class="p-2 bg-slate-800/50 rounded flex justify-between"><span>Subir cambios a GitHub</span><span class="text-emerald-400 text-xs font-semibold">Completada</span></li>
+                    </ul>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                    <h3 class="font-bold text-slate-200 mb-3"><i class="fas fa-store text-amber-400 mr-2"></i> E-commerce Store</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="p-2 bg-slate-800/50 rounded flex justify-between items-center">
+                            <span>Curso Piano Armónico</span>
+                            <span class="font-bold text-emerald-400">$99.00 USD</span>
+                        </div>
+                        <div class="p-2 bg-slate-800/50 rounded flex justify-between items-center">
+                            <span>Pack 100 Backing Tracks Pro</span>
+                            <span class="font-bold text-emerald-400">$49.00 USD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 px-6 py-4 text-center text-xs text-slate-500">
+        PRD System © 2026 - Conectado a C:/PRD_System - Sistema Multimodal Autónomo
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-blue-500', 'text-blue-400');
+                el.classList.add('border-transparent', 'text-slate-400');
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const btn = document.getElementById(`btn-${tabName}`);
+            btn.classList.add('border-blue-500', 'text-blue-400');
+            btn.classList.remove('border-transparent', 'text-slate-400');
+        }
+
+        function triggerGenerate(moduleName) {
+            const out = document.getElementById('forge-output');
+            out.innerHTML += `\n[PRD-FORGE] Generando módulo '${moduleName}'...`;
+            setTimeout(() => {
+                out.innerHTML += `\n[PRD-FORGE] ¡Módulo '${moduleName}' generado exitosamente en generated/!`;
+                out.scrollTop = out.scrollHeight;
+            }, 1000);
+        }
+
+        // Web MIDI Browser Check
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess().then(
+                () => {
+                    document.getElementById('midi-status').innerHTML = '<i class="fas fa-check-circle text-emerald-400 mr-1"></i> Web MIDI Listo';
+                },
+                () => {}
+            );
+        }
+    </script>
 </body>
 </html>

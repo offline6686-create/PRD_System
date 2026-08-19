@@ -1,0 +1,16 @@
+# Ignore inner git repositories
+02_PROYECTOS/*/.git/
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# System files
+.DS_Store
+Thumbs.db
