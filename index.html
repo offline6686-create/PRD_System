@@ -3,691 +3,895 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRD System - Portal Unificado Localhost</title>
+    <title>PRD - Plataforma Integral</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000000; color: #ffffff; font-family: system-ui, -apple-system, sans-serif; }
+        body { 
+            background-color: #000000; 
+            color: #ffffff; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Monochromatic B&W Piano Styling */
-        .piano-container { display: flex; justify-content: center; position: relative; user-select: none; padding: 20px 0; }
-        .white-key { width: 44px; height: 180px; background: #ffffff; border: 1px solid #18181b; display: inline-block; position: relative; border-radius: 0 0 6px 6px; cursor: pointer; transition: background 0.1s; }
-        .white-key.active { background: #e2e8f0 !important; border-bottom: 6px solid #000000; }
-        .black-key { width: 28px; height: 110px; background: #09090b; border: 1px solid #27272a; display: inline-block; margin-left: -14px; margin-right: -14px; z-index: 10; position: relative; border-radius: 0 0 5px 5px; cursor: pointer; transition: background 0.1s; }
-        .black-key.active { background: #52525b !important; }
-        .key-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 10px; font-weight: bold; color: #52525b; pointer-events: none; }
-        .black-key .key-label { color: #a1a1aa; bottom: 6px; }
+        /* Monochromatic B&W Cards */
+        .bw-card {
+            background: #09090b;
+            border: 1px solid #27272a;
+            transition: all 0.2s ease-in-out;
+        }
+        .bw-card:hover {
+            border-color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.12);
+        }
+
+        .portal-btn-card {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .portal-btn-card:hover {
+            background: #f4f4f5;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.2);
+        }
 
         /* Modal styling */
-        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index: 50; justify-content: center; align-items: center; }
+        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 50; justify-content: center; align-items: center; }
         .modal-bg.active { display: flex; }
+
+        /* Notification Toast */
+        #access-denied-toast {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col selection:bg-white selection:text-black">
 
-    <!-- Header / Navbar Monochromatic -->
-    <header class="bg-black border-b border-zinc-800 px-6 py-4 flex flex-wrap justify-between items-center">
+    <!-- Toast Notification for Access Denied -->
+    <div id="access-denied-toast" class="bg-red-950 border border-red-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-md">
+        <div class="w-10 h-10 rounded-full bg-red-600/30 text-red-400 flex items-center justify-center text-xl shrink-0">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-sm text-red-200">Acceso Restringido</h4>
+            <p id="access-denied-message" class="text-xs text-zinc-300">Acceso denegado. No posee permisos para ingresar a este módulo.</p>
+        </div>
+        <button onclick="hideToast()" class="text-zinc-400 hover:text-white ml-auto">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Header Monochromatic -->
+    <header class="bg-black border-b border-zinc-800 px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-40">
         <div class="flex items-center space-x-4">
-            <div class="bg-white text-black font-black px-3 py-1.5 rounded text-lg tracking-tighter">PRD</div>
+            <div class="bg-white text-black font-black px-3.5 py-1.5 rounded text-xl tracking-tighter shadow-lg cursor-pointer" onclick="goHome()">PRD</div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-white">PRD System Localhost Portal</h1>
-                <p class="text-xs text-zinc-400">Sistema Multimodal Unificado | Blanco & Negro High-Contrast</p>
+                <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    PRD System
+                    <span class="text-xs px-2 py-0.5 bg-zinc-900 border border-zinc-700 text-zinc-300 font-mono rounded">v3.0.0 CORE</span>
+                </h1>
+                <p class="text-xs text-zinc-400">Plataforma Integral • Economic Data Hub & Control de Roles</p>
             </div>
         </div>
 
-        <!-- 3-Role Login Status / Selector -->
-        <div class="flex items-center space-x-3">
-            <span id="role-badge" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-white rounded flex items-center gap-1.5">
-                <i class="fas fa-user-shield text-zinc-400"></i> Rol Actual: <span id="current-role-name" class="font-bold">ADMINISTRADOR</span>
-            </span>
-            <button onclick="openLoginModal('admin')" class="px-3 py-1.5 bg-white text-black text-xs font-bold rounded hover:bg-zinc-200 transition flex items-center gap-1">
-                <i class="fas fa-key"></i> Login Admin (2FA)
-            </button>
-            <button onclick="openLoginModal('docente')" class="px-3 py-1.5 bg-zinc-900 text-white border border-zinc-700 text-xs font-bold rounded hover:bg-zinc-800 transition">
-                Login Docente
-            </button>
-            <button onclick="openLoginModal('alumno')" class="px-3 py-1.5 bg-zinc-900 text-white border border-zinc-700 text-xs font-bold rounded hover:bg-zinc-800 transition">
-                Login Alumno
-            </button>
+        <!-- Top User Info Bar -->
+        <div class="flex items-center space-x-3" id="top-user-bar">
+            <div id="unauthenticated-status" class="flex items-center gap-2 text-xs text-zinc-400 font-mono">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Sistema Listo • Seleccione Perfil
+            </div>
+            
+            <div id="authenticated-status" class="hidden flex items-center gap-3">
+                <span id="role-badge" class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-xs font-mono text-white rounded flex items-center gap-2">
+                    <i class="fas fa-user-circle text-zinc-400"></i> <span id="current-user-display" class="font-bold">Usuario</span>
+                </span>
+                <button onclick="logout()" class="px-3.5 py-1.5 bg-white text-black hover:bg-zinc-200 text-xs font-bold rounded transition flex items-center gap-1.5 shadow">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Navigation Tabs -->
-    <div class="bg-black border-b border-zinc-800 px-6">
-        <nav class="flex space-x-8 overflow-x-auto" id="tabs">
-            <button onclick="switchTab('music')" id="btn-music" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-white text-white flex items-center gap-2">
-                <i class="fas fa-piano"></i> Music Space & Chordy
-            </button>
-            <button onclick="switchTab('library')" id="btn-library" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-book-reader"></i> Biblioteca Digital (Tus Libros)
-            </button>
-            <button onclick="switchTab('chat')" id="btn-chat" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-comments"></i> Chat Interno Segmentado
-            </button>
-            <button onclick="switchTab('daw')" id="btn-daw" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-compact-disc"></i> Ableton Live & DAW Stream
-            </button>
-            <button onclick="switchTab('payments')" id="btn-payments" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-university"></i> Pasarelas & Bancos
-            </button>
-            <button onclick="switchTab('trading')" id="btn-trading" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-chart-line"></i> FTMO Trading Bot
-            </button>
-            <button onclick="switchTab('economy')" id="btn-economy" class="tab-btn px-4 py-3 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2">
-                <i class="fas fa-globe"></i> Dashboard Económico
-            </button>
-        </nav>
-    </div>
+    <!-- 1. PANTALLA PRINCIPAL - PORTAL PRD (Visible solo sin autenticar) -->
+    <main id="landing-gate" class="flex-grow flex flex-col justify-between items-center px-4 py-8 max-w-7xl mx-auto w-full">
+        
+        <!-- Minimalist B&W Header -->
+        <div class="w-full text-center space-y-3 pt-4">
+            <div class="inline-block px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-mono text-zinc-400 uppercase tracking-widest">
+                Portal Principal de Acceso
+            </div>
+            <h1 class="text-6xl font-black tracking-tighter text-white font-sans uppercase">
+                PRD
+            </h1>
+            <p class="text-xs font-mono tracking-widest text-zinc-400 uppercase">
+                Plataforma Integral
+            </p>
+        </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+        <!-- THE 4 MAIN ROLE SELECTION BUTTONS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full py-8 max-w-5xl">
+            
+            <!-- 1. USUARIO (ACADEMIA DE MÚSICA) -->
+            <div onclick="openLoginModal('usuario')" class="portal-btn-card p-8 rounded-2xl cursor-pointer text-center group flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black tracking-tight text-black uppercase">USUARIO</h3>
+                    <p class="text-xs font-semibold text-zinc-600 mt-1">Academia de Música</p>
+                </div>
+                <div class="w-full py-2 bg-black text-white text-xs font-bold rounded-xl group-hover:bg-zinc-800 transition">
+                    Ingresar <i class="fas fa-arrow-right ml-1"></i>
+                </div>
+            </div>
 
-        <!-- TAB 1: MUSIC SPACE ACADEMY & CHORDY MIDI -->
-        <div id="tab-music" class="tab-content active space-y-6">
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
-                
-                <div class="flex flex-wrap justify-between items-center border-b border-zinc-800 pb-4">
+            <!-- 2. CLIENTE (ECOMMERCE PRD) -->
+            <div onclick="openLoginModal('cliente')" class="portal-btn-card p-8 rounded-2xl cursor-pointer text-center group flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black tracking-tight text-black uppercase">CLIENTE</h3>
+                    <p class="text-xs font-semibold text-zinc-600 mt-1">Ecommerce PRD</p>
+                </div>
+                <div class="w-full py-2 bg-black text-white text-xs font-bold rounded-xl group-hover:bg-zinc-800 transition">
+                    Ingresar <i class="fas fa-arrow-right ml-1"></i>
+                </div>
+            </div>
+
+            <!-- 3. DOCENTE (PANEL DOCENTE) -->
+            <div onclick="openLoginModal('docente')" class="portal-btn-card p-8 rounded-2xl cursor-pointer text-center group flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black tracking-tight text-black uppercase">DOCENTE</h3>
+                    <p class="text-xs font-semibold text-zinc-600 mt-1">Panel Docente</p>
+                </div>
+                <div class="w-full py-2 bg-black text-white text-xs font-bold rounded-xl group-hover:bg-zinc-800 transition">
+                    Ingresar <i class="fas fa-arrow-right ml-1"></i>
+                </div>
+            </div>
+
+            <!-- 4. ADMINISTRADOR (DASHBOARD PRD) -->
+            <div onclick="openLoginModal('admin')" class="portal-btn-card p-8 rounded-2xl cursor-pointer text-center group flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black tracking-tight text-black uppercase">ADMINISTRADOR</h3>
+                    <p class="text-xs font-semibold text-zinc-600 mt-1">Dashboard PRD</p>
+                </div>
+                <div class="w-full py-2 bg-black text-white text-xs font-bold rounded-xl group-hover:bg-zinc-800 transition">
+                    Ingresar <i class="fas fa-arrow-right ml-1"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Lower Section: Role Capabilities Summary Grid (Matching Mockup) -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full pt-6 border-t border-zinc-800 text-left text-xs">
+            
+            <div class="bw-card p-5 rounded-xl space-y-2">
+                <div class="flex items-center gap-2 font-bold text-white text-sm">
+                    <i class="fas fa-graduation-cap text-zinc-400"></i> USUARIO
+                </div>
+                <p class="text-zinc-400 font-semibold">Accede a la Academia de Música</p>
+                <ul class="text-zinc-400 space-y-1 pl-4 list-disc text-[11px]">
+                    <li>Mis cursos</li>
+                    <li>Mis clases</li>
+                    <li>Material de estudio</li>
+                    <li>Biblioteca & Evaluaciones</li>
+                    <li>Calendario & Certificados</li>
+                    <li>Chat con docentes</li>
+                </ul>
+            </div>
+
+            <div class="bw-card p-5 rounded-xl space-y-2">
+                <div class="flex items-center gap-2 font-bold text-white text-sm">
+                    <i class="fas fa-shopping-cart text-zinc-400"></i> CLIENTE
+                </div>
+                <p class="text-zinc-400 font-semibold">Accede al Ecommerce PRD</p>
+                <ul class="text-zinc-400 space-y-1 pl-4 list-disc text-[11px]">
+                    <li>Catálogo de productos</li>
+                    <li>Mis compras</li>
+                    <li>Facturas</li>
+                    <li>Seguimiento de pedidos</li>
+                    <li>Soporte al cliente</li>
+                    <li>Historial de compras</li>
+                </ul>
+            </div>
+
+            <div class="bw-card p-5 rounded-xl space-y-2">
+                <div class="flex items-center gap-2 font-bold text-white text-sm">
+                    <i class="fas fa-chalkboard-teacher text-zinc-400"></i> DOCENTE
+                </div>
+                <p class="text-zinc-400 font-semibold">Accede al Panel Docente</p>
+                <ul class="text-zinc-400 space-y-1 pl-4 list-disc text-[11px]">
+                    <li>Crear cursos y clases</li>
+                    <li>Gestionar alumnos</li>
+                    <li>Subir material pedagógico</li>
+                    <li>Programar clases & Zoom</li>
+                    <li>Evaluaciones & Chat alumnos</li>
+                </ul>
+            </div>
+
+            <div class="bw-card p-5 rounded-xl space-y-2">
+                <div class="flex items-center gap-2 font-bold text-white text-sm">
+                    <i class="fas fa-user-shield text-zinc-400"></i> ADMINISTRADOR
+                </div>
+                <p class="text-zinc-400 font-semibold">Accede al Dashboard PRD</p>
+                <ul class="text-zinc-400 space-y-1 pl-4 list-disc text-[11px]">
+                    <li>Academia de Música & Ecommerce</li>
+                    <li>Economía & Market Data Hub</li>
+                    <li>Trading Engine & Métricas</li>
+                    <li>Gestión de Usuarios & Auditoría</li>
+                    <li>Supervisión & Configuración</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="pt-6 text-[11px] text-zinc-600 font-mono">
+            PRD - Plataforma Integral • Servidor Operativo en http://localhost:3000
+        </div>
+    </main>
+
+    <!-- DASHBOARD CONTAINER (Hidden until authentication) -->
+    <div id="dashboard-container" class="hidden flex-grow flex flex-col">
+        
+        <!-- Navigation Bar for Tabs -->
+        <div class="bg-zinc-950 border-b border-zinc-800 px-6 sticky top-[65px] z-30">
+            <nav class="flex space-x-2 overflow-x-auto py-2" id="tabs-container">
+                <!-- Tabs rendered dynamically based on role -->
+            </nav>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-grow p-6 max-w-7xl mx-auto w-full space-y-6">
+            
+            <!-- 1. DASHBOARD GENERAL ADMINISTRADOR -->
+            <div id="tab-admin-dashboard" class="tab-content space-y-6">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
                     <div>
-                        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                            <i class="fas fa-music"></i> Detector de Acordes de Piano en Tiempo Real ("Chordy")
+                        <h2 class="text-2xl font-black tracking-tight text-white">Dashboard General PRD</h2>
+                        <p class="text-xs text-zinc-400">Resumen general y control centralizado de la plataforma PRD</p>
+                    </div>
+                    <span class="px-3 py-1 bg-white text-black font-mono text-xs font-bold rounded">ROL: ADMINISTRADOR</span>
+                </div>
+
+                <!-- Metrics Overview Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bw-card p-5 rounded-xl">
+                        <div class="text-[11px] font-mono text-zinc-400 uppercase">Usuarios Activos</div>
+                        <div class="text-2xl font-black text-white mt-1">1,254</div>
+                        <div class="text-[11px] text-emerald-400 font-mono mt-1">+12% este mes</div>
+                    </div>
+                    <div class="bw-card p-5 rounded-xl">
+                        <div class="text-[11px] font-mono text-zinc-400 uppercase">Alumnos Registrados</div>
+                        <div class="text-2xl font-black text-white mt-1">842</div>
+                        <div class="text-[11px] text-emerald-400 font-mono mt-1">+8% este mes</div>
+                    </div>
+                    <div class="bw-card p-5 rounded-xl">
+                        <div class="text-[11px] font-mono text-zinc-400 uppercase">Ventas (30 días)</div>
+                        <div class="text-2xl font-black text-white mt-1">$ 12,430 USD</div>
+                        <div class="text-[11px] text-emerald-400 font-mono mt-1">+15% volumen</div>
+                    </div>
+                    <div class="bw-card p-5 rounded-xl">
+                        <div class="text-[11px] font-mono text-zinc-400 uppercase">Ingresos Totales</div>
+                        <div class="text-2xl font-black text-white mt-1">$ 98,765 USD</div>
+                        <div class="text-[11px] text-emerald-400 font-mono mt-1">+29% YoY</div>
+                    </div>
+                </div>
+
+                <!-- System Sections Overview Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <div class="bw-card p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <i class="fas fa-graduation-cap"></i> Academia de Música
+                            </h3>
+                            <button onclick="switchTab('academia')" class="text-xs text-zinc-400 hover:text-white font-mono">Ver más →</button>
+                        </div>
+                        <div class="space-y-1.5 text-xs text-zinc-300 font-mono">
+                            <div class="flex justify-between"><span>Cursos Activos:</span><strong class="text-white">24</strong></div>
+                            <div class="flex justify-between"><span>Alumnos Activos:</span><strong class="text-white">842</strong></div>
+                            <div class="flex justify-between"><span>Clases Hoy:</span><strong class="text-white">18</strong></div>
+                            <div class="flex justify-between"><span>Evaluaciones Pendientes:</span><strong class="text-white">7</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="bw-card p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <i class="fas fa-shopping-cart"></i> Ecommerce PRD
+                            </h3>
+                            <button onclick="switchTab('ecommerce')" class="text-xs text-zinc-400 hover:text-white font-mono">Ver más →</button>
+                        </div>
+                        <div class="space-y-1.5 text-xs text-zinc-300 font-mono">
+                            <div class="flex justify-between"><span>Pedidos Nuevos:</span><strong class="text-white">32</strong></div>
+                            <div class="flex justify-between"><span>Ventas Hoy:</span><strong class="text-white">$ 1,430 USD</strong></div>
+                            <div class="flex justify-between"><span>Productos en Catálogo:</span><strong class="text-white">156</strong></div>
+                            <div class="flex justify-between"><span>Clientes Registrados:</span><strong class="text-white">1,254</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="bw-card p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                                <i class="fas fa-chart-line"></i> Economía & Data Hub
+                            </h3>
+                            <button onclick="switchTab('economia')" class="text-xs text-zinc-400 hover:text-white font-mono">Ver más →</button>
+                        </div>
+                        <div class="space-y-1.5 text-xs text-zinc-300 font-mono">
+                            <div class="flex justify-between"><span>Dólar MEP:</span><strong class="text-white">$1,285.50</strong></div>
+                            <div class="flex justify-between"><span>Inflación (Mensual):</span><strong class="text-white">2.1%</strong></div>
+                            <div class="flex justify-between"><span>FED Funds Rate:</span><strong class="text-white">4.25% - 4.50%</strong></div>
+                            <div class="flex justify-between"><span>Reservas BCRA:</span><strong class="text-white">$31,450 M USD</strong></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Recent Activity & Audit Trail Box -->
+                <div class="bw-card p-6 rounded-2xl space-y-4">
+                    <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                        <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                            <i class="fas fa-history text-zinc-400"></i> Auditoría & Registros en Vivo
+                        </h3>
+                        <button onclick="loadAuditLogs()" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-white rounded hover:bg-zinc-800">
+                            <i class="fas fa-sync-alt"></i> Actualizar Logs
+                        </button>
+                    </div>
+                    <div id="admin-audit-container" class="space-y-2 font-mono text-xs max-h-64 overflow-y-auto">
+                        <div class="text-zinc-500 text-center py-4">Cargando registros de auditoría desde audit_trail.json...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. MÓDULO ECONOMÍA (ECONOMIC & FINANCIAL DATA HUB) -->
+            <div id="tab-economia" class="tab-content space-y-6">
+                
+                <!-- Header and Submenu -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-800 pb-4 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                            <i class="fas fa-university text-white"></i> PRD-FORGE ECONOMÍA & FINANCIAL DATA HUB
                         </h2>
-                        <p class="text-xs text-zinc-400 mt-1">Conecta tu teclado USB/MIDI o haz clic en las teclas del piano. Escucharás el sonido real y verás el acorde exacto.</p>
+                        <p class="text-xs text-zinc-400">Centro de información macroeconómica, mercados de capitales y fuentes oficiales</p>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="openZoomModal()" class="px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-zinc-200 transition flex items-center gap-2">
-                            <i class="fas fa-video"></i> Abrir Clase Zoom en Vivo
-                        </button>
-                        <span id="midi-status" class="text-xs border border-zinc-700 bg-zinc-900 text-zinc-300 px-3 py-2 rounded font-mono">
-                            <i class="fas fa-plug mr-1"></i> Web MIDI: Listo
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Real-time Chord Screen -->
-                <div class="bg-black p-8 rounded-xl border border-zinc-800 text-center space-y-2">
-                    <div class="text-xs uppercase tracking-widest font-mono text-zinc-500">ACORDE DETECTADO EN TIEMPO REAL</div>
-                    <div id="chord-display" class="text-6xl font-black tracking-tight text-white py-2">C Major</div>
-                    <div id="chord-details" class="text-sm font-mono text-zinc-400">Tónica: C | Fórmula: Major Triad | Notas: C4 - E4 - G4</div>
-                </div>
-
-                <!-- Interactive Virtual Piano Keyboard (Clickable + MIDI) -->
-                <div class="bg-black border border-zinc-800 rounded-xl p-4 text-center">
-                    <div class="text-xs font-mono text-zinc-500 mb-2">Haz clic en las teclas para tocar notas y probar la detección de acordes:</div>
-                    <div class="piano-container overflow-x-auto" id="piano">
-                        <div class="white-key" data-note="60" onclick="toggleKey(60)"><span class="key-label">C4</span></div>
-                        <div class="black-key" data-note="61" onclick="toggleKey(61)"><span class="key-label">C#</span></div>
-                        <div class="white-key" data-note="62" onclick="toggleKey(62)"><span class="key-label">D4</span></div>
-                        <div class="black-key" data-note="63" onclick="toggleKey(63)"><span class="key-label">D#</span></div>
-                        <div class="white-key" data-note="64" onclick="toggleKey(64)"><span class="key-label">E4</span></div>
-                        <div class="white-key" data-note="65" onclick="toggleKey(65)"><span class="key-label">F4</span></div>
-                        <div class="black-key" data-note="66" onclick="toggleKey(66)"><span class="key-label">F#</span></div>
-                        <div class="white-key" data-note="67" onclick="toggleKey(67)"><span class="key-label">G4</span></div>
-                        <div class="black-key" data-note="68" onclick="toggleKey(68)"><span class="key-label">G#</span></div>
-                        <div class="white-key" data-note="69" onclick="toggleKey(69)"><span class="key-label">A4</span></div>
-                        <div class="black-key" data-note="70" onclick="toggleKey(70)"><span class="key-label">A#</span></div>
-                        <div class="white-key" data-note="71" onclick="toggleKey(71)"><span class="key-label">B4</span></div>
-                        <div class="white-key" data-note="72" onclick="toggleKey(72)"><span class="key-label">C5</span></div>
-                    </div>
-                    <div class="mt-3 flex justify-center space-x-4">
-                        <button onclick="clearPiano()" class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-xs font-mono text-zinc-300 rounded hover:bg-zinc-800">
-                            Limpiar Teclas
-                        </button>
+                    
+                    <!-- Submenu Tabs -->
+                    <div class="flex space-x-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800 font-mono text-xs">
+                        <button onclick="switchEconomySubtab('overview')" id="subbtn-overview" class="subtab-btn px-3 py-1.5 rounded-lg font-bold bg-white text-black">Overview</button>
+                        <button onclick="switchEconomySubtab('sources')" id="subbtn-sources" class="subtab-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white">Fuentes Oficiales</button>
+                        <button onclick="switchEconomySubtab('macro')" id="subbtn-macro" class="subtab-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white">Macro</button>
+                        <button onclick="switchEconomySubtab('markets')" id="subbtn-markets" class="subtab-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white">Markets</button>
+                        <button onclick="switchEconomySubtab('trading')" id="subbtn-trading" class="subtab-btn px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white">Trading Bot 🔒</button>
                     </div>
                 </div>
 
-                <!-- Real PDF Scores and Classes Loaded from System -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
+                <!-- SUBSECTION: OVERVIEW & FUENTES OFICIALES -->
+                <div id="ecosub-overview" class="space-y-6">
+                    
+                    <!-- Macro Overview Ticker Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bw-card p-4 rounded-xl">
+                            <div class="text-[11px] font-mono text-zinc-400 uppercase">🇺🇸 FED Funds Rate</div>
+                            <div class="text-xl font-black text-white mt-1">4.25% - 4.50%</div>
+                            <div class="text-[11px] text-zinc-400 font-mono mt-1">FRED / St. Louis FED</div>
+                        </div>
+                        <div class="bw-card p-4 rounded-xl">
+                            <div class="text-[11px] font-mono text-zinc-400 uppercase">🇦🇷 BCRA Reservas</div>
+                            <div class="text-xl font-black text-white mt-1">$31,450 M USD</div>
+                            <div class="text-[11px] text-emerald-400 font-mono mt-1">+1.2% BCRA Oficial</div>
+                        </div>
+                        <div class="bw-card p-4 rounded-xl">
+                            <div class="text-[11px] font-mono text-zinc-400 uppercase">🇦🇷 Dólar MEP</div>
+                            <div class="text-xl font-black text-white mt-1">$1,285.50</div>
+                            <div class="text-[11px] text-zinc-400 font-mono mt-1">BYMA / CNV</div>
+                        </div>
+                        <div class="bw-card p-4 rounded-xl">
+                            <div class="text-[11px] font-mono text-zinc-400 uppercase">🇦🇷 Inflación IPC</div>
+                            <div class="text-xl font-black text-white mt-1">2.1% Mensual</div>
+                            <div class="text-[11px] text-emerald-400 font-mono mt-1">-0.3% INDEC</div>
+                        </div>
+                    </div>
+
+                    <!-- Official Sources Hub Cards Container -->
+                    <div class="space-y-4">
                         <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-music"></i> Partituras y Guías de Clase</h3>
-                            <button onclick="openUploadModal('pdf')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar PDF</button>
+                            <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                                <i class="fas fa-globe text-zinc-400"></i> FUENTES OFICIALES Y PORTALES DE DATOS
+                            </h3>
+                            <span class="text-xs font-mono text-zinc-500">Panel de Control de Enlaces Directos</span>
                         </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center">
+
+                        <!-- Cards Grid (BCRA, BYMA, FED, FRED, TradingView) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="official-sources-grid">
+                            
+                            <!-- BCRA -->
+                            <div class="bw-card p-6 rounded-2xl flex flex-col justify-between space-y-4">
                                 <div>
-                                    <div class="font-bold text-white"><i class="fas fa-file-pdf text-red-500 mr-2"></i> Clase_Guitarra_Funk_Ritmos.pdf</div>
-                                    <div class="text-zinc-500">Ejercicios de ritmos funk y comping</div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-xs font-mono text-zinc-400 font-bold">🇦🇷 Argentina</span>
+                                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono rounded font-bold">● Sitio oficial</span>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white">BCRA</h4>
+                                    <p class="text-xs text-zinc-400 mt-2 leading-relaxed">Banco Central de la República Argentina. Estadísticas monetarias, reservas internacionales, tipo de cambio e indicadores oficiales.</p>
                                 </div>
-                                <a href="/library/Clase_Guitarra_Funk_Ritmos.pdf" target="_blank" class="px-3 py-1 bg-white text-black font-bold text-xs rounded">Abrir PDF</a>
+                                <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+                                    <span class="text-[11px] font-mono text-zinc-500">Economic Data</span>
+                                    <a href="https://www.bcra.gob.ar/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition flex items-center gap-1.5">
+                                        Abrir sitio oficial <i class="fas fa-external-link-alt text-[10px]"></i>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded flex justify-between items-center">
+
+                            <!-- BYMA -->
+                            <div class="bw-card p-6 rounded-2xl flex flex-col justify-between space-y-4">
                                 <div>
-                                    <div class="font-bold text-white"><i class="fas fa-file-pdf text-red-500 mr-2"></i> Clase_Samba_Tom_Jobim_Comping.pdf</div>
-                                    <div class="text-zinc-500">Só Danço Samba - Armonía y Acompañamiento</div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-xs font-mono text-zinc-400 font-bold">🇦🇷 Argentina</span>
+                                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono rounded font-bold">● Sitio oficial</span>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white">BYMA</h4>
+                                    <p class="text-xs text-zinc-400 mt-2 leading-relaxed">Bolsas y Mercados Argentinos. Mercado de capitales argentino y datos de mercado (renta fija, variable, bonos y opciones).</p>
                                 </div>
-                                <a href="/library/Clase_Samba_Tom_Jobim_Comping.pdf" target="_blank" class="px-3 py-1 bg-white text-black font-bold text-xs rounded">Abrir PDF</a>
+                                <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+                                    <span class="text-[11px] font-mono text-zinc-500">Market Data Exchange</span>
+                                    <a href="https://www.byma.com.ar/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition flex items-center gap-1.5">
+                                        Abrir sitio oficial <i class="fas fa-external-link-alt text-[10px]"></i>
+                                    </a>
+                                </div>
                             </div>
+
+                            <!-- Federal Reserve -->
+                            <div class="bw-card p-6 rounded-2xl flex flex-col justify-between space-y-4">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-xs font-mono text-zinc-400 font-bold">🇺🇸 Estados Unidos</span>
+                                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono rounded font-bold">● Sitio oficial</span>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white">Federal Reserve</h4>
+                                    <p class="text-xs text-zinc-400 mt-2 leading-relaxed">Sistema de Reserva Federal de los Estados Unidos. Datos de política monetaria, tasas de interés e informes económicos gubernamentales.</p>
+                                </div>
+                                <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+                                    <span class="text-[11px] font-mono text-zinc-500">Central Bank</span>
+                                    <a href="https://www.federalreserve.gov/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition flex items-center gap-1.5">
+                                        Abrir sitio oficial <i class="fas fa-external-link-alt text-[10px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- FRED -->
+                            <div class="bw-card p-6 rounded-2xl flex flex-col justify-between space-y-4">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-xs font-mono text-zinc-400 font-bold">🇺🇸 Estados Unidos</span>
+                                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono rounded font-bold">● Sitio oficial</span>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white">FRED</h4>
+                                    <p class="text-xs text-zinc-400 mt-2 leading-relaxed">Federal Reserve Economic Data. Base de datos macroeconómica oficial administrada por la Reserva Federal de St. Louis.</p>
+                                </div>
+                                <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+                                    <span class="text-[11px] font-mono text-zinc-500">Economic Data Hub</span>
+                                    <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition flex items-center gap-1.5">
+                                        Abrir sitio oficial <i class="fas fa-external-link-alt text-[10px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- TradingView -->
+                            <div class="bw-card p-6 rounded-2xl flex flex-col justify-between space-y-4">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-xs font-mono text-zinc-400 font-bold">🌎 Internacional</span>
+                                        <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono rounded font-bold">● Sitio oficial</span>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white">TradingView</h4>
+                                    <p class="text-xs text-zinc-400 mt-2 leading-relaxed">Plataforma global de análisis técnico, gráficos interactivos e instrumentos financieros de todos los mercados del mundo.</p>
+                                </div>
+                                <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+                                    <span class="text-[11px] font-mono text-zinc-500">Market Analytics</span>
+                                    <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl hover:bg-zinc-200 transition flex items-center gap-1.5">
+                                        Abrir sitio oficial <i class="fas fa-external-link-alt text-[10px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-sm text-white flex items-center gap-2"><i class="fas fa-sliders-h"></i> Backing Tracks Audio Engine</h3>
-                            <button onclick="openUploadModal('audio')" class="px-2.5 py-1 bg-white text-black font-bold text-xs rounded"><i class="fas fa-plus mr-1"></i> Cargar Audio</button>
+                </div>
+
+                <!-- SUBSECTION: TRADING BOT EN DESARROLLO -->
+                <div id="ecosub-trading" class="hidden space-y-6">
+                    <div class="bw-card p-12 rounded-2xl text-center space-y-4 border border-zinc-800">
+                        <div class="w-16 h-16 bg-zinc-900 text-white rounded-full flex items-center justify-center text-3xl mx-auto border border-zinc-700">
+                            <i class="fas fa-robot"></i>
                         </div>
-                        <div class="p-4 bg-zinc-900 border border-zinc-800 rounded space-y-3">
-                            <div class="text-xs font-bold text-white flex items-center gap-2"><i class="fas fa-play-circle text-white"></i> Jazz Blue Backing Track (F Major)</div>
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-xs font-mono">
-                                    <span>Velocidad (Tempo): <span id="tempo-val">1.0x</span></span>
-                                    <input type="range" min="0.5" max="1.5" step="0.1" value="1.0" oninput="document.getElementById('tempo-val').innerText = this.value + 'x'">
-                                </div>
-                                <div class="flex justify-between text-xs font-mono">
-                                    <span>Tono (Pitch Shift): <span id="pitch-val">0 semitonos</span></span>
-                                    <input type="range" min="-6" max="6" step="1" value="0" oninput="document.getElementById('pitch-val').innerText = this.value + ' semitonos'">
-                                </div>
-                            </div>
+                        <h3 class="text-2xl font-bold text-white">Módulo Trading Bot & Executions</h3>
+                        <p class="text-xs text-zinc-400 max-w-lg mx-auto">
+                            Estado: <span class="text-amber-400 font-bold font-mono">EN DESARROLLO / PRÓXIMAMENTE</span>. Se habilitará una vez completada la ingesta y normalización de datos macroeconómicos.
+                        </p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto pt-4 text-xs font-mono text-zinc-500">
+                            <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl">Strategy Engine</div>
+                            <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl">Risk Manager</div>
+                            <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl">Backtesting</div>
+                            <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-xl">Broker Adapter</div>
                         </div>
                     </div>
                 </div>
 
             </div>
-        </div>
 
-        <!-- TAB 2: BIBLIOTECA DIGITAL DE LIBROS (TUS LIBROS COPIADOS) -->
-        <div id="tab-library" class="tab-content space-y-6">
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
+            <!-- 3. MÓDULO ACADEMIA DE MÚSICA (USUARIO) -->
+            <div id="tab-academia" class="tab-content space-y-6">
                 <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
                     <div>
-                        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                            <i class="fas fa-book-reader"></i> Biblioteca Digital de Libros Cargada desde tu Máquina
-                        </h2>
-                        <p class="text-xs text-zinc-400 mt-1">Libros y métodos reales importados de tu carpeta personal para alumnos y docentes.</p>
+                        <h2 class="text-2xl font-bold text-white">Academia de Música PRD</h2>
+                        <p class="text-xs text-zinc-400">Campus Virtual de Formación Académica</p>
                     </div>
-                    <button onclick="openUploadModal('book')" class="px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-zinc-200 transition">
-                        <i class="fas fa-upload mr-1"></i> Subir Nuevo Libro
-                    </button>
+                    <span class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-zinc-300 rounded">Campus Alumno</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bw-card p-5 rounded-xl space-y-2 cursor-pointer hover:border-white">
+                        <div class="text-2xl font-bold text-white"><i class="fas fa-book-open text-zinc-400 mb-2 block"></i> Mis Cursos</div>
+                        <p class="text-xs text-zinc-400">3 Cursos activos inscritos</p>
+                    </div>
+                    <div class="bw-card p-5 rounded-xl space-y-2 cursor-pointer hover:border-white">
+                        <div class="text-2xl font-bold text-white"><i class="fas fa-video text-zinc-400 mb-2 block"></i> Mis Clases</div>
+                        <p class="text-xs text-zinc-400">Próxima clase: Mañana 18:00 hs</p>
+                    </div>
+                    <div class="bw-card p-5 rounded-xl space-y-2 cursor-pointer hover:border-white">
+                        <div class="text-2xl font-bold text-white"><i class="fas fa-file-pdf text-zinc-400 mb-2 block"></i> Material</div>
+                        <p class="text-xs text-zinc-400">Partituras y teoría descargable</p>
+                    </div>
+                    <div class="bw-card p-5 rounded-xl space-y-2 cursor-pointer hover:border-white">
+                        <div class="text-2xl font-bold text-white"><i class="fas fa-comments text-zinc-400 mb-2 block"></i> Chat Docentes</div>
+                        <p class="text-xs text-zinc-400">Canal directo con profesores</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. MÓDULO ECOMMERCE PRD (CLIENTE) -->
+            <div id="tab-ecommerce" class="tab-content space-y-6">
+                <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">PRD Ecommerce</h2>
+                        <p class="text-xs text-zinc-400">Catálogo oficial de instrumentos y productos</p>
+                    </div>
+                    <span class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-zinc-300 rounded">Portal Cliente</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm text-white">J.S. Bach - Inventions</h3>
-                                <p class="text-xs text-zinc-400">Dos y Tres Voces (Edición Completa)</p>
-                            </div>
+                    <div class="bw-card p-6 rounded-2xl space-y-3">
+                        <div class="w-full h-40 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center text-4xl text-zinc-600">
+                            <i class="fas fa-guitar"></i>
                         </div>
-                        <div class="text-xs font-mono text-zinc-500">2.6 MB | PDF Importado</div>
-                        <a href="/library/Bach_Inventions.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
-                        </a>
-                    </div>
-
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm text-white">Beethoven Complete Piano Sonatas</h3>
-                                <p class="text-xs text-zinc-400">Sonatas para Piano de Beethoven</p>
-                            </div>
+                        <h3 class="font-bold text-white">Guitarra Electrónica Signature PRD</h3>
+                        <p class="text-xs text-zinc-400">Instrumento profesional de estudio 24 trastes.</p>
+                        <div class="flex justify-between items-center pt-2">
+                            <span class="text-lg font-bold text-white">$ 1,450.00 USD</span>
+                            <button onclick="alert('Producto agregado al carrito')" class="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl">Comprar</button>
                         </div>
-                        <div class="text-xs font-mono text-zinc-500">34.4 MB | PDF Importado</div>
-                        <a href="/library/Beethoven_Complete_Piano_Sonatas.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
-                        </a>
                     </div>
-
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm text-white">Mike Stern - Guitar Method</h3>
-                                <p class="text-xs text-zinc-400">Jazz & Fusion Soloing & Comping</p>
-                            </div>
-                        </div>
-                        <div class="text-xs font-mono text-zinc-500">7.0 MB | PDF Importado</div>
-                        <a href="/library/Mike_Stern_Method.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
-                        </a>
-                    </div>
-
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm text-white">Stevie Ray Vaughan - Songbook</h3>
-                                <p class="text-xs text-zinc-400">In Step Transcriptions & Solos</p>
-                            </div>
-                        </div>
-                        <div class="text-xs font-mono text-zinc-500">12.8 MB | PDF Importado</div>
-                        <a href="/library/Stevie_Ray_Vaughan_Songbook.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
-                        </a>
-                    </div>
-
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm text-white">Super Sight Reading Secrets</h3>
-                                <p class="text-xs text-zinc-400">Howard Richman Sight Reading Guide</p>
-                            </div>
-                        </div>
-                        <div class="text-xs font-mono text-zinc-500">3.7 MB | PDF Importado</div>
-                        <a href="/library/Super_Sight_Reading_Secrets.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
-                        </a>
-                    </div>
-
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded text-xl text-white"><i class="fas fa-book font-bold"></i></div>
-                            <div>
-                                <h3 class="font-bold text-sm text-white">Michael Jackson Collection</h3>
-                                <p class="text-xs text-zinc-400">Transcriptions & Piano/Guitar Scores</p>
-                            </div>
-                        </div>
-                        <div class="text-xs font-mono text-zinc-500">11.5 MB | PDF Importado</div>
-                        <a href="/library/Michael_Jackson_Songbook.pdf" target="_blank" class="block w-full text-center py-2 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-book-open mr-1"></i> Leer Libro Digital PDF
-                        </a>
-                    </div>
-
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 3: CHAT INTERNO SEGMENTADO -->
-        <div id="tab-chat" class="tab-content space-y-6">
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-4">
-                <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                    <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-                        <i class="fas fa-comments"></i> Chat Interno Segmentado
-                    </h2>
-                    <div class="flex space-x-2">
-                        <button onclick="switchChatChannel('alumnos')" id="chat-btn-alumnos" class="px-3 py-1 bg-white text-black font-bold text-xs rounded">Canal Alumnos</button>
-                        <button onclick="switchChatChannel('docentes')" id="chat-btn-docentes" class="px-3 py-1 bg-zinc-900 text-zinc-400 border border-zinc-800 font-bold text-xs rounded">Canal Docentes</button>
-                        <button onclick="switchChatChannel('consultas')" id="chat-btn-consultas" class="px-3 py-1 bg-zinc-900 text-zinc-400 border border-zinc-800 font-bold text-xs rounded">Consultas Alumno-Docente</button>
-                    </div>
-                </div>
-
-                <div id="chat-box" class="bg-black p-4 rounded-xl border border-zinc-800 h-64 overflow-y-auto font-mono text-xs space-y-3">
-                    <div class="p-2 bg-zinc-900 border border-zinc-800 rounded">
-                        <span class="font-bold text-white">[Alumno Carlos]:</span> <span class="text-zinc-300">¿Alguien leyó el libro de Bach Inventions de la biblioteca? Está genial para independencia de manos.</span>
-                    </div>
-                    <div class="p-2 bg-zinc-900 border border-zinc-800 rounded">
-                        <span class="font-bold text-white">[Alumno Maria]:</span> <span class="text-zinc-300">¡Sí! Y con el detector Chordy puedo chequear los acordes en tiempo real.</span>
-                    </div>
-                </div>
-
-                <div class="flex space-x-2">
-                    <input type="text" id="chat-input" placeholder="Escribe un mensaje en este canal..." class="flex-1 bg-black border border-zinc-800 px-4 py-2 text-xs rounded text-white focus:outline-none focus:border-white">
-                    <button onclick="sendChatMessage()" class="px-4 py-2 bg-white text-black font-bold text-xs rounded">Enviar Mensaje</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: ABLETON LIVE & DAW STREAMING -->
-        <div id="tab-daw" class="tab-content space-y-6">
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
+            <!-- 5. MÓDULO PANEL DOCENTE -->
+            <div id="tab-docente" class="tab-content space-y-6">
                 <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
                     <div>
-                        <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                            <i class="fas fa-compact-disc"></i> Conexión Ableton Live & Streaming DAW
-                        </h2>
-                        <p class="text-xs text-zinc-400 mt-1">Transmite el audio de tu placa de sonido/DAW directamente a los alumnos en 48kHz Stereo HD.</p>
+                        <h2 class="text-2xl font-bold text-white">Panel Docente PRD</h2>
+                        <p class="text-xs text-zinc-400">Gestión de clases, alumnos y contenidos pedagógicos</p>
                     </div>
-                    <button onclick="alert('Abriendo enlace de protocolo ejecutable para Ableton Live local...')" class="px-4 py-2 bg-white text-black font-bold text-xs rounded">
-                        <i class="fas fa-power-off mr-1"></i> Abrir Ableton Live Local
-                    </button>
+                    <span class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-xs font-mono text-zinc-300 rounded">Panel Profesor</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <h3 class="font-bold text-sm text-white">Transmisión de Audio HD en Vivo (Profesor -> Alumnos)</h3>
-                        <p class="text-xs text-zinc-400">Canal de audio WebRTC sin compresión de voz para escuchar sintetizadores y VSTs:</p>
-                        <div class="p-4 bg-zinc-900 border border-zinc-800 rounded space-y-2">
-                            <div class="flex justify-between text-xs font-mono">
-                                <span>Estado de Transmisión:</span>
-                                <span class="text-emerald-400 font-bold">● TRANSMITIENDO HD (48kHz / 320kbps)</span>
-                            </div>
-                            <button onclick="alert('Canal de audio DAW reiniciado.')" class="w-full py-2 bg-zinc-800 text-white font-bold text-xs rounded border border-zinc-700">Reconectar Audio DAW</button>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bw-card p-6 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-white text-lg"><i class="fas fa-plus-circle text-zinc-400"></i> Crear Nueva Clase</h3>
+                        <p class="text-xs text-zinc-400">Programa clases en vivo e integra enlaces de Zoom.</p>
+                        <button onclick="alert('Modal de creación de clase...')" class="w-full py-2.5 bg-white text-black font-bold text-xs rounded-xl">Programar Clase</button>
                     </div>
-
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-3">
-                        <h3 class="font-bold text-sm text-white">Entrega de Proyectos DAW (Multi-DAW)</h3>
-                        <p class="text-xs text-zinc-400">Formatos soportados: .als (Ableton), .flp (FL Studio), .zip (Stems WAV)</p>
-                        <button onclick="openUploadModal('daw')" class="w-full py-3 bg-white text-black font-bold text-xs rounded">
-                            <i class="fas fa-upload mr-1"></i> Subir Proyecto DAW / Stems (.als, .flp, .zip)
-                        </button>
+                    <div class="bw-card p-6 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-white text-lg"><i class="fas fa-users text-zinc-400"></i> Mis Alumnos</h3>
+                        <p class="text-xs text-zinc-400">Gestión y seguimiento académico de estudiantes.</p>
+                        <button onclick="alert('Lista de alumnos asignados...')" class="w-full py-2.5 bg-zinc-900 border border-zinc-700 text-white font-bold text-xs rounded-xl">Ver Alumnos</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 5: PASARELAS DE PAGO & BANCOS -->
-        <div id="tab-payments" class="tab-content space-y-6">
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl space-y-6">
-                <div>
-                    <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                        <i class="fas fa-university"></i> Conexión con Bancos & Pasarelas de Pago
-                    </h2>
-                    <p class="text-xs text-zinc-400 mt-1">Integración directa para cobranzas de cursos y membresías en Argentina y el Exterior.</p>
-                </div>
+        </main>
+    </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Argentina Banks -->
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-4">
-                        <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                                🇦🇷 Argentina (Bancos & MercadoPago)
-                            </h3>
-                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">Conectado</span>
-                        </div>
-                        <div class="space-y-3 text-xs">
-                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
-                                <div class="font-bold text-white">MercadoPago (Checkout Pro & QR)</div>
-                                <div class="text-zinc-400">Procesa Tarjetas de Crédito/Débito, Mercado Crédito y Saldo en Cuenta MP.</div>
-                                <button onclick="simulatePayment('MercadoPago ARS $45.000')" class="mt-2 w-full py-1.5 bg-white text-black font-bold rounded">Pagar con MercadoPago</button>
-                            </div>
-                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
-                                <div class="font-bold text-white">Transferencia Bancaria Directa (CBU / Alias)</div>
-                                <div class="font-mono text-zinc-400">Banco Galicia | BBVA | Banco Nación | Santander</div>
-                                <div class="font-mono text-zinc-300">Alias: <span class="text-white font-bold">MUSIC.SPACE.ARG</span></div>
-                                <button onclick="alert('CBU Copiado al portapapeles. CBU: 0070012300000012345678')" class="mt-2 w-full py-1.5 bg-zinc-800 text-white font-bold rounded border border-zinc-700">Copiar CBU / Alias</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- International Banks -->
-                    <div class="bg-black border border-zinc-800 p-5 rounded-xl space-y-4">
-                        <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                                🌐 Exterior / Internacional (USD & EUR)
-                            </h3>
-                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">Conectado</span>
-                        </div>
-                        <div class="space-y-3 text-xs">
-                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
-                                <div class="font-bold text-white">Stripe Checkout (Visa / Mastercard / Amex)</div>
-                                <div class="text-zinc-400">Cobros internacionales automáticos y suscripciones recurrentes en USD.</div>
-                                <button onclick="simulatePayment('Stripe USD $99.00')" class="mt-2 w-full py-1.5 bg-white text-black font-bold rounded">Pagar con Stripe (USD)</button>
-                            </div>
-                            <div class="p-3 bg-zinc-900 border border-zinc-800 rounded space-y-1">
-                                <div class="font-bold text-white">PayPal & Transferencia Internacional Wise / SWIFT</div>
-                                <div class="text-zinc-400">Acepta PayPal checkout e IBAN bancario internacional.</div>
-                                <button onclick="simulatePayment('PayPal USD $99.00')" class="mt-2 w-full py-1.5 bg-zinc-800 text-white font-bold rounded border border-zinc-700">Pagar con PayPal / Wise</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- TAB 6: TRADING BOT MONITOR -->
-        <div id="tab-trading" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
-                    <div class="text-xs text-zinc-400 font-mono mb-1">Balance Actual (Cuenta FTMO)</div>
-                    <div class="text-3xl font-black text-white">$101,450.00 USD</div>
-                    <div class="text-xs text-zinc-400 mt-2"><i class="fas fa-arrow-up text-white"></i> +1.45% de retorno positivo</div>
-                </div>
-                <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
-                    <div class="text-xs text-zinc-400 font-mono mb-1">Drawdown Diario (Regla FTMO 5%)</div>
-                    <div class="text-3xl font-black text-white">0.85%</div>
-                    <div class="text-xs text-zinc-400 mt-2">Buffer de seguridad activado a 4.5%</div>
-                </div>
-                <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-xl">
-                    <div class="text-xs text-zinc-400 font-mono mb-1">Firma Criptográfica SHA-256</div>
-                    <div class="text-xs font-mono text-zinc-300 truncate">a3f9e81b2c4d5e6f7a8b9c0d1e2f3a4b...</div>
-                    <div class="text-xs text-zinc-400 mt-2"><i class="fas fa-shield-alt text-white"></i> Auditoría inmutable activa</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 7: DASHBOARD ECONÓMICO -->
-        <div id="tab-economy" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
-                    <div class="text-xs font-mono text-zinc-400 mb-1">🇺🇸 FED (Reserva Federal)</div>
-                    <div class="text-2xl font-black text-white">4.25% - 4.50%</div>
-                    <div class="text-xs text-zinc-400">Tasa Fondos Federales</div>
-                    <div class="mt-2 text-xs text-zinc-300 font-mono">US CPI YoY: <span class="text-white font-bold">2.4%</span></div>
-                </div>
-                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
-                    <div class="text-xs font-mono text-zinc-400 mb-1">🇪🇺 BCE (Banco Central Europeo)</div>
-                    <div class="text-2xl font-black text-white">3.00%</div>
-                    <div class="text-xs text-zinc-400">Tasa Refi Eurozona</div>
-                    <div class="mt-2 text-xs text-zinc-300 font-mono">HICP YoY: <span class="text-white font-bold">2.1%</span></div>
-                </div>
-                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
-                    <div class="text-xs font-mono text-zinc-400 mb-1">🇦🇷 BCRA (Argentina)</div>
-                    <div class="text-2xl font-black text-white">$31,000 M USD</div>
-                    <div class="text-xs text-zinc-400">Reservas Internacionales</div>
-                    <div class="mt-2 text-xs text-zinc-300 font-mono">IPC Mensual: <span class="text-white font-bold">2.1%</span></div>
-                </div>
-                <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
-                    <div class="text-xs font-mono text-zinc-400 mb-1">🌐 FMI (Proyección PIB)</div>
-                    <div class="text-2xl font-black text-white">+3.2% Global</div>
-                    <div class="text-xs text-zinc-400">Crecimiento estimado</div>
-                    <div class="mt-2 text-xs text-zinc-300 font-mono">EE.UU: +2.6% | Arg: +5.0%</div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- MODAL 1: 3-ROLE LOGIN (Con 2FA en Admin) -->
+    <!-- MODAL DE LOGIN (LOGIN UNIFICADO) -->
     <div id="login-modal" class="modal-bg">
-        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl max-w-md w-full space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                <h3 id="login-title" class="text-lg font-extrabold text-white">Autenticación de Usuario</h3>
-                <button onclick="closeLoginModal()" class="text-zinc-400 hover:text-white"><i class="fas fa-times"></i></button>
+        <div class="bw-card p-8 rounded-2xl max-w-md w-full mx-4 space-y-6 relative border border-zinc-700 shadow-2xl">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white text-lg">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 bg-white text-black font-black rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-lg">
+                    <i id="login-modal-icon" class="fas fa-lock"></i>
+                </div>
+                <h3 id="login-modal-title" class="text-2xl font-black text-white tracking-tight">Ingreso al Sistema</h3>
+                <p id="login-modal-subtitle" class="text-xs text-zinc-400">Ingrese sus credenciales de acceso</p>
             </div>
-            
-            <div class="space-y-3 text-xs">
+
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <input type="hidden" id="login-role-target" value="usuario">
                 <div>
-                    <label class="block text-zinc-400 mb-1 font-mono">Usuario / Email</label>
-                    <input type="text" id="login-email" value="admin@prd-system.com" class="w-full bg-black border border-zinc-800 px-3 py-2 text-white rounded">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1 uppercase tracking-wider">Usuario o Email</label>
+                    <input type="text" id="login-username" required placeholder="Ej: usuario, cliente, docente o admin" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white">
                 </div>
                 <div>
-                    <label class="block text-zinc-400 mb-1 font-mono">Contraseña</label>
-                    <input type="password" id="login-pass" value="••••••••••••" class="w-full bg-black border border-zinc-800 px-3 py-2 text-white rounded">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider">Contraseña</label>
+                        <a href="#" onclick="alert('Se ha enviado un enlace de recuperación a su dirección de correo registrada.')" class="text-[11px] text-zinc-400 hover:text-white underline">Recuperar contraseña</a>
+                    </div>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white">
                 </div>
-                <div id="2fa-container" class="hidden space-y-1">
-                    <label class="block text-amber-400 font-mono font-bold">🔒 Código 2FA / PIN de Seguridad de 6 dígitos</label>
-                    <input type="text" id="login-2fa" placeholder="Ej: 849201" class="w-full bg-black border border-amber-500/50 px-3 py-2 text-white rounded font-mono tracking-widest text-center text-sm">
+                <button type="submit" class="w-full py-3.5 bg-white text-black font-black text-sm rounded-xl hover:bg-zinc-200 transition shadow-lg uppercase tracking-wider">
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <div class="pt-4 border-t border-zinc-800 space-y-2">
+                <div class="text-[11px] font-mono text-center text-zinc-500 uppercase">Accesos Rápidos Demo:</div>
+                <div class="grid grid-cols-4 gap-1.5 text-xs font-mono">
+                    <button onclick="quickDemoLogin('usuario')" class="py-1.5 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded">Usuario</button>
+                    <button onclick="quickDemoLogin('cliente')" class="py-1.5 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded">Cliente</button>
+                    <button onclick="quickDemoLogin('docente')" class="py-1.5 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded">Docente</button>
+                    <button onclick="quickDemoLogin('admin')" class="py-1.5 bg-white text-black font-bold rounded">Admin</button>
                 </div>
-                <button onclick="processLogin()" class="w-full py-2.5 bg-white text-black font-bold text-sm rounded mt-2">Iniciar Sesión Segura</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 2: CARGA GENERAL DE ARCHIVOS (PDF, Audio, Libros, DAW) -->
-    <div id="upload-modal" class="modal-bg">
-        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl max-w-md w-full space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                <h3 class="text-lg font-extrabold text-white"><i class="fas fa-upload mr-2"></i> Centro de Carga de Archivos</h3>
-                <button onclick="closeUploadModal()" class="text-zinc-400 hover:text-white"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block text-zinc-400 mb-1 font-mono">Título del Archivo</label>
-                    <input type="text" id="upload-title" placeholder="Ej: Ejercicio_Escalas_Jazz.pdf" class="w-full bg-black border border-zinc-800 px-3 py-2 text-white rounded">
-                </div>
-                <div>
-                    <label class="block text-zinc-400 mb-1 font-mono">Seleccionar Archivo de la computadora</label>
-                    <input type="file" id="upload-file" class="w-full bg-black border border-zinc-800 px-3 py-2 text-zinc-400 rounded">
-                </div>
-                <button onclick="confirmUpload()" class="w-full py-2.5 bg-white text-black font-bold text-sm rounded">Subir Archivo al Sistema</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ZOOM MODAL (Interactive) -->
-    <div id="zoom-modal" class="modal-bg">
-        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-xl max-w-lg w-full space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
-                    <i class="fas fa-video"></i> Clase Zoom en Vivo - Music Space
-                </h3>
-                <button onclick="closeZoomModal()" class="text-zinc-400 hover:text-white"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="space-y-3 text-xs">
-                <div class="p-3 bg-black border border-zinc-800 rounded">
-                    <div class="font-bold text-white">Masterclass: Armonía Moderna & Acordes de Piano</div>
-                    <div class="text-zinc-400 mt-1">ID de Reunión: <span class="font-mono text-white">987-6543-210</span></div>
-                    <div class="text-zinc-400">Estado: <span class="text-emerald-400 font-bold">EN VIVO AHORA</span></div>
-                </div>
-                <p class="text-zinc-400">Haz clic abajo para abrir e ingresar a la sala de Zoom directamente:</p>
-                <a href="https://zoom.us/j/9876543210?pwd=MusicSpaceLiveClass2026" target="_blank" class="block w-full py-3 bg-white text-black text-center font-bold text-sm rounded hover:bg-zinc-200">
-                    <i class="fas fa-external-link-alt mr-2"></i> Unirse a la Clase en Zoom
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Web Audio Synthesizer & Chordy Detection Logic -->
+    <!-- JAVASCRIPT SYSTEM LOGIC -->
     <script>
-        const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let activeNotes = new Set([60, 64, 67]); // Default C Major
-        let currentRole = 'admin';
+        let currentUser = null;
+        let authToken = null;
 
-        function playNoteFreq(midiNote) {
-            const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.8);
+        // Role permissions configuration
+        const ROLE_PERMISSIONS = {
+            'usuario': ['academia'],
+            'alumno': ['academia'],
+            'cliente': ['ecommerce'],
+            'docente': ['docente'],
+            'admin': ['admin-dashboard', 'economia', 'academia', 'ecommerce', 'docente'],
+            'owner': ['admin-dashboard', 'economia', 'academia', 'ecommerce', 'docente']
+        };
+
+        function showToast(msg) {
+            document.getElementById('access-denied-message').innerText = msg || 'Acceso denegado. No posee permisos para ingresar a este módulo.';
+            const toast = document.getElementById('access-denied-toast');
+            toast.style.display = 'flex';
+            setTimeout(() => { hideToast(); }, 4000);
         }
 
-        function toggleKey(midiNote) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (activeNotes.has(midiNote)) activeNotes.delete(midiNote);
-            else { activeNotes.add(midiNote); playNoteFreq(midiNote); }
-            updateChordDisplay();
+        function hideToast() {
+            document.getElementById('access-denied-toast').style.display = 'none';
         }
 
-        function clearPiano() { activeNotes.clear(); updateChordDisplay(); }
+        function goHome() {
+            if (currentUser) {
+                const mainTab = ROLE_PERMISSIONS[currentUser.role][0];
+                switchTab(mainTab);
+            } else {
+                logout();
+            }
+        }
 
-        function updateChordDisplay() {
-            document.querySelectorAll('#piano .white-key, #piano .black-key').forEach(el => {
-                const note = parseInt(el.getAttribute('data-note'));
-                if (activeNotes.has(note)) el.classList.add('active');
-                else el.classList.remove('active');
+        function openLoginModal(role) {
+            const modal = document.getElementById('login-modal');
+            document.getElementById('login-role-target').value = role;
+            
+            const titles = {
+                'usuario': 'Acceso Usuario / Academia',
+                'cliente': 'Acceso Cliente Ecommerce',
+                'docente': 'Acceso Panel Docente',
+                'admin': 'Acceso Administrador PRD'
+            };
+            const icons = {
+                'usuario': 'fa-graduation-cap',
+                'cliente': 'fa-shopping-cart',
+                'docente': 'fa-chalkboard-teacher',
+                'admin': 'fa-user-shield'
+            };
+
+            document.getElementById('login-modal-title').innerText = titles[role] || 'Ingreso al Sistema';
+            document.getElementById('login-modal-icon').className = `fas ${icons[role] || 'fa-lock'}`;
+            document.getElementById('login-username').value = role;
+            document.getElementById('login-password').value = `${role}123`;
+            modal.classList.add('active');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.remove('active');
+        }
+
+        function quickDemoLogin(role) {
+            openLoginModal(role);
+            document.querySelector('#login-modal form').requestSubmit();
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const role = document.getElementById('login-role-target').value;
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role, username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    showToast(data.error);
+                    return;
+                }
+                authToken = data.token;
+                currentUser = { name: data.name, role: data.role, username: data.username };
+                closeLoginModal();
+                applyUserSession();
+            })
+            .catch(err => {
+                showToast('Error de conexión con el servidor.');
+            });
+        }
+
+        function applyUserSession() {
+            if (!currentUser) return;
+
+            document.getElementById('landing-gate').classList.add('hidden');
+            document.getElementById('dashboard-container').classList.remove('hidden');
+            document.getElementById('unauthenticated-status').classList.add('hidden');
+            document.getElementById('authenticated-status').classList.remove('hidden');
+
+            document.getElementById('current-user-display').innerText = `${currentUser.name} [${currentUser.role.toUpperCase()}]`;
+
+            // Build Navbar Tabs based on Role
+            const tabsNav = document.getElementById('tabs-container');
+            tabsNav.innerHTML = '';
+
+            const userRole = currentUser.role.toLowerCase();
+            const allowedTabs = ROLE_PERMISSIONS[userRole] || ['academia'];
+
+            const allTabDefs = [
+                { id: 'admin-dashboard', label: 'Dashboard Central', icon: 'fa-tachometer-alt', roles: ['admin', 'owner'] },
+                { id: 'economia', label: 'Economía & Data Hub', icon: 'fa-university', roles: ['admin', 'owner'] },
+                { id: 'academia', label: 'Academia de Música', icon: 'fa-graduation-cap', roles: ['usuario', 'alumno', 'admin', 'owner'] },
+                { id: 'ecommerce', label: 'PRD Ecommerce', icon: 'fa-shopping-cart', roles: ['cliente', 'admin', 'owner'] },
+                { id: 'docente', label: 'Panel Docente', icon: 'fa-chalkboard-teacher', roles: ['docente', 'admin', 'owner'] }
+            ];
+
+            allTabDefs.forEach(t => {
+                if (allowedTabs.includes(t.id)) {
+                    const btn = document.createElement('button');
+                    btn.id = `navbtn-${t.id}`;
+                    btn.className = 'tab-nav-btn px-4 py-2 text-sm font-bold border-b-2 border-transparent text-zinc-400 hover:text-white flex items-center gap-2 transition';
+                    btn.onclick = () => switchTab(t.id);
+                    btn.innerHTML = `<i class="fas ${t.icon}"></i> ${t.label}`;
+                    tabsNav.appendChild(btn);
+                }
             });
 
-            const notesArray = Array.from(activeNotes).sort((a,b) => a-b);
-            const displayEl = document.getElementById('chord-display');
-            const detailsEl = document.getElementById('chord-details');
+            // Redirect to first allowed tab
+            switchTab(allowedTabs[0]);
 
-            if (notesArray.length === 0) {
-                displayEl.innerText = "Sin Selección";
-                detailsEl.innerText = "Toca teclas en el piano o conecta tu teclado MIDI";
+            if (allowedTabs.includes('admin-dashboard')) {
+                loadAuditLogs();
+            }
+        }
+
+        function switchTab(tabId) {
+            if (!currentUser) return;
+
+            const userRole = currentUser.role.toLowerCase();
+            const allowedTabs = ROLE_PERMISSIONS[userRole] || [];
+
+            // STRICT RBAC CHECK & REDIRECTION
+            if (!allowedTabs.includes(tabId)) {
+                showToast(`Acceso denegado. No posee permisos para ingresar al módulo [${tabId.toUpperCase()}].`);
+                // Redirect to first authorized dashboard
+                const defaultAuthorizedTab = allowedTabs[0] || 'academia';
+                switchTab(defaultAuthorizedTab);
                 return;
             }
 
-            const pitchClasses = Array.from(new Set(notesArray.map(n => n % 12))).sort((a,b) => a-b);
-            const noteNamesList = notesArray.map(n => NOTE_NAMES[n % 12] + Math.floor(n / 12 - 1));
-
-            const rootPC = pitchClasses[0];
-            const rootName = NOTE_NAMES[rootPC];
-            const intervals = pitchClasses.map(pc => (pc - rootPC + 12) % 12).sort((a,b) => a-b);
-            const keyStr = intervals.join(',');
-
-            let chordName = rootName;
-            let formulaName = "Custom Cluster";
-
-            if (keyStr === '0,4,7') { chordName = `${rootName} Major`; formulaName = "Triada Mayor"; }
-            else if (keyStr === '0,3,7') { chordName = `${rootName} Minor`; formulaName = "Triada Menor"; }
-            else if (keyStr === '0,4,7,11') { chordName = `${rootName}maj7`; formulaName = "Mayor 7ma"; }
-            else if (keyStr === '0,3,7,10') { chordName = `${rootName}m7`; formulaName = "Menor 7ma"; }
-            else if (keyStr === '0,4,7,10') { chordName = `${rootName}7`; formulaName = "Dominante 7ma"; }
-            else if (keyStr === '0,3,6,10') { chordName = `${rootName}m7b5`; formulaName = "Semidisminuido"; }
-
-            displayEl.innerText = chordName;
-            detailsEl.innerText = `Tónica: ${rootName} | Fórmula: ${formulaName} | Notas: [${noteNamesList.join(', ')}]`;
-        }
-
-        // 3-Role Login Modals
-        function openLoginModal(role) {
-            currentRole = role;
-            const container2fa = document.getElementById('2fa-container');
-            const titleEl = document.getElementById('login-title');
-
-            if (role === 'admin') {
-                titleEl.innerText = '👑 Login Administrador Maestro (2FA Adicional)';
-                container2fa.classList.remove('hidden');
-            } else if (role === 'docente') {
-                titleEl.innerText = '👨‍🏫 Login Docente / Profesor';
-                container2fa.classList.add('hidden');
-            } else {
-                titleEl.innerText = '🎓 Login Alumno / Estudiante';
-                container2fa.classList.add('hidden');
-            }
-            document.getElementById('login-modal').classList.add('active');
-        }
-
-        function closeLoginModal() { document.getElementById('login-modal').classList.remove('active'); }
-
-        function processLogin() {
-            document.getElementById('current-role-name').innerText = currentRole.toUpperCase();
-            alert(`¡Autenticación exitosa como ${currentRole.toUpperCase()}!`);
-            closeLoginModal();
-        }
-
-        // Upload Modals
-        function openUploadModal(type) {
-            document.getElementById('upload-modal').classList.add('active');
-        }
-        function closeUploadModal() { document.getElementById('upload-modal').classList.remove('active'); }
-
-        function confirmUpload() {
-            const title = document.getElementById('upload-title').value || 'Archivo_Cargado.pdf';
-            alert(`Archivo '${title}' subido con éxito al servidor.`);
-            closeUploadModal();
-        }
-
-        // Chat Switching
-        function switchChatChannel(ch) {
-            document.querySelectorAll('#tab-chat button').forEach(b => {
-                b.classList.remove('bg-white', 'text-black');
-                b.classList.add('bg-zinc-900', 'text-zinc-400');
-            });
-            document.getElementById(`chat-btn-${ch}`).classList.add('bg-white', 'text-black');
-            document.getElementById(`chat-btn-${ch}`).classList.remove('bg-zinc-900', 'text-zinc-400');
-            document.getElementById('chat-box').innerHTML += `\n<div class="text-zinc-500 font-mono">[Sistema]: Cambiado a canal '${ch.toUpperCase()}'</div>`;
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            if (!input.value) return;
-            document.getElementById('chat-box').innerHTML += `<div class="p-2 bg-zinc-900 border border-zinc-800 rounded"><span class="font-bold text-white">[${currentRole.toUpperCase()}]:</span> <span class="text-zinc-300">${input.value}</span></div>`;
-            input.value = '';
-        }
-
-        // Modals & Navigation
-        function switchTab(name) {
+            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('border-white', 'text-white');
-                el.classList.add('border-transparent', 'text-zinc-400');
+
+            // Reset tab buttons
+            document.querySelectorAll('.tab-nav-btn').forEach(btn => {
+                btn.classList.remove('border-white', 'text-white');
+                btn.classList.add('border-transparent', 'text-zinc-400');
             });
-            document.getElementById(`tab-${name}`).classList.add('active');
-            const btn = document.getElementById(`btn-${name}`);
-            btn.classList.add('border-white', 'text-white');
-            btn.classList.remove('border-transparent', 'text-zinc-400');
+
+            // Activate target tab content & button
+            const targetContent = document.getElementById(`tab-${tabId}`);
+            const targetBtn = document.getElementById(`navbtn-${tabId}`);
+
+            if (targetContent) targetContent.classList.add('active');
+            if (targetBtn) {
+                targetBtn.classList.remove('border-transparent', 'text-zinc-400');
+                targetBtn.classList.add('border-white', 'text-white');
+            }
         }
 
-        function openZoomModal() { document.getElementById('zoom-modal').classList.add('active'); }
-        function closeZoomModal() { document.getElementById('zoom-modal').classList.remove('active'); }
-        function simulatePayment(prov) { alert(`Iniciando conexión bancaria segura con ${prov}...`); }
+        function switchEconomySubtab(subId) {
+            document.querySelectorAll('.subtab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-black', 'font-bold');
+                btn.classList.add('text-zinc-400');
+            });
 
-        // Initial chord display rendering
-        updateChordDisplay();
+            const activeBtn = document.getElementById(`subbtn-${subId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-zinc-400');
+                activeBtn.classList.add('bg-white', 'text-black', 'font-bold');
+            }
+
+            if (subId === 'trading') {
+                document.getElementById('ecosub-overview').classList.add('hidden');
+                document.getElementById('ecosub-trading').classList.remove('hidden');
+            } else {
+                document.getElementById('ecosub-overview').classList.remove('hidden');
+                document.getElementById('ecosub-trading').classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            authToken = null;
+            document.getElementById('dashboard-container').classList.add('hidden');
+            document.getElementById('landing-gate').classList.remove('hidden');
+            document.getElementById('unauthenticated-status').classList.remove('hidden');
+            document.getElementById('authenticated-status').classList.add('hidden');
+        }
+
+        function loadAuditLogs() {
+            fetch('/api/admin/audit-logs', {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => res.json())
+            .then(logs => {
+                const container = document.getElementById('admin-audit-container');
+                if (!container || !Array.isArray(logs)) return;
+                container.innerHTML = logs.map(l => `
+                    <div class="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex justify-between items-center text-xs">
+                        <span>[${l.timestamp.substring(11, 19)}] Usuario <strong class="text-white">#${l.user_id}</strong> → <strong>${l.action}</strong> (${l.resource})</span>
+                        <span class="${l.status === 'SUCCESS' ? 'text-emerald-400' : 'text-red-400'} font-bold">${l.status}</span>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                console.error("Audit log error:", err);
+            });
+        }
     </script>
 </body>
 </html>

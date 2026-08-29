@@ -1,0 +1,211 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "owner",
+      "email": "owner@prd.system",
+      "password_hash": "67dbf0aea332262446a8f29892b9cba5ec4e506226d430bd10ceee3823263e83",
+      "role": "owner",
+      "name": "Owner & Chief Strategist",
+      "is_active": 1
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "email": "admin@prd.system",
+      "password_hash": "077d7a08a9f03cf846a135e80af580109c5112160bba6a4df8d9c81823de9673",
+      "role": "admin",
+      "name": "Administrador PRD",
+      "is_active": 1
+    },
+    {
+      "id": 3,
+      "username": "docente",
+      "email": "docente@prd.system",
+      "password_hash": "4436764d8a229095620ab54dbcb54f91666c20a08876d347b60167c79dea61fe",
+      "role": "docente",
+      "name": "Profesor de Música",
+      "is_active": 1
+    },
+    {
+      "id": 4,
+      "username": "alumno",
+      "email": "alumno@prd.system",
+      "password_hash": "ff5f3e65c8f013ae8d54dfd16527191b5383f085651a6ce2c37c565a963a089e",
+      "role": "alumno",
+      "name": "Estudiante Registrado",
+      "is_active": 1
+    },
+    {
+      "id": 5,
+      "username": "usuario",
+      "email": "usuario@prd.system",
+      "password_hash": "3765c00092c5d15473fccfcef0301de8d19d3321fc2affb3abf480fc285e9afd",
+      "role": "usuario",
+      "name": "Estudiante de Academia",
+      "is_active": 1
+    },
+    {
+      "id": 6,
+      "username": "cliente",
+      "email": "cliente@prd.system",
+      "password_hash": "077d7a08a9f03cf846a135e80af580109c5112160bba6a4df8d9c81823de9673",
+      "role": "cliente",
+      "name": "Cliente E-Commerce PRD",
+      "is_active": 1
+    }
+  ],
+  "macro_series": [
+    {
+      "symbol": "FED_FUNDS",
+      "name": "Federal Funds Rate",
+      "value": "4.25% - 4.50%",
+      "source": "FED / FRED",
+      "trend": "STABLE",
+      "updated": "2026-08-21"
+    },
+    {
+      "symbol": "BCRA_RESERVAS",
+      "name": "Reservas Internacionales BCRA",
+      "value": "$31,450 M USD",
+      "source": "BCRA API",
+      "trend": "+1.2%",
+      "updated": "2026-08-21"
+    },
+    {
+      "symbol": "USD_ARS_MEP",
+      "name": "Dólar MEP Argentina",
+      "value": "$1,285.50",
+      "source": "BYMA / CNV",
+      "trend": "-0.4%",
+      "updated": "2026-08-21"
+    },
+    {
+      "symbol": "ARG_INFLACION",
+      "name": "IPC Inflación Mensual INDEC",
+      "value": "2.1%",
+      "source": "INDEC",
+      "trend": "-0.3%",
+      "updated": "2026-08-21"
+    },
+    {
+      "symbol": "FTMO_EQUITY",
+      "name": "FTMO Challenge Equity ($100k)",
+      "value": "$101,450.00 USD",
+      "source": "Trading Bot",
+      "trend": "+$1,450",
+      "updated": "2026-08-21"
+    }
+  ],
+  "research_notes": [
+    {
+      "id": 1,
+      "title": "Impacto de Recorte de Tasas FED en Bonos Soberanos Argentina (AL30/GD30)",
+      "hypothesis": "Un recorte de 25bps en la tasa FED comprimirá spreads emergentes aumentando paridades de bonos en un 4-6%.",
+      "tags": "FED, BCRA, Bonos, Macro",
+      "author": "Owner",
+      "created_at": "2026-08-20"
+    },
+    {
+      "id": 2,
+      "title": "Estrategia Breakout en EURUSD durante Apertura de Londres",
+      "hypothesis": "Ruptura del máximo/mínimo de la sesión asiática presenta un R:R promedio de 1:2.5 en temporalidad 15M.",
+      "tags": "Trading, FX, Backtesting",
+      "author": "Owner",
+      "created_at": "2026-08-19"
+    }
+  ],
+  "trade_specifications": [],
+  "trading_journal": [],
+  "tokens": {
+    "prd_token_21fddff74b6630511f66e35d3d0c3657": {
+      "id": 1,
+      "username": "owner",
+      "role": "owner",
+      "name": "Owner & Chief Strategist"
+    },
+    "prd_token_eaee9d47df4611d9bab558e5169ea859": {
+      "id": 2,
+      "username": "admin",
+      "role": "admin",
+      "name": "Administrador PRD"
+    },
+    "prd_token_636bc20424eff22ee3b1991e1ff28257": {
+      "id": 3,
+      "username": "docente",
+      "role": "docente",
+      "name": "Profesor de Música"
+    },
+    "prd_token_ded51ffaf3fbc050902ea9a5f61a1252": {
+      "id": 1,
+      "username": "owner",
+      "role": "owner",
+      "name": "Owner & Chief Strategist"
+    },
+    "prd_token_6328e86b8f108862fd5d433fa9bae047": {
+      "id": 3,
+      "username": "docente",
+      "role": "docente",
+      "name": "Profesor de Música"
+    },
+    "prd_token_8ae75c9b60edbbb9ad5c1b4a63a5bc71": {
+      "id": 4,
+      "username": "alumno",
+      "role": "alumno",
+      "name": "Estudiante Registrado"
+    },
+    "prd_token_1dc3c9bf4c0cc81acb5a2bf50127c42e": {
+      "id": 1,
+      "username": "owner",
+      "role": "owner",
+      "name": "Owner & Chief Strategist"
+    },
+    "prd_token_1b7327c500872bc16071efc0bc03395d": {
+      "id": 1,
+      "username": "owner",
+      "role": "owner",
+      "name": "Owner & Chief Strategist"
+    },
+    "prd_token_e4a7b4d067fa73a1972b51dfc5c5942f": {
+      "id": 1,
+      "username": "owner",
+      "role": "owner",
+      "name": "Owner & Chief Strategist"
+    },
+    "prd_token_8dd5bae924581077acb9f2942ada234f": {
+      "id": 2,
+      "username": "admin",
+      "email": "admin@prd.system",
+      "role": "admin",
+      "name": "Administrador PRD"
+    },
+    "prd_token_c7579eb37b89977baa51b9c9dcbec4c5": {
+      "id": 6,
+      "username": "cliente",
+      "email": "cliente@prd.system",
+      "role": "cliente",
+      "name": "Cliente E-Commerce PRD"
+    },
+    "prd_token_6eff5fae78a9651828fa74ad09762d87": {
+      "id": 3,
+      "username": "docente",
+      "email": "docente@prd.system",
+      "role": "docente",
+      "name": "Profesor de Música"
+    },
+    "prd_token_b0d1e83bf7b49a838ec2a91fa8da2f83": {
+      "id": 5,
+      "username": "usuario",
+      "email": "usuario@prd.system",
+      "role": "usuario",
+      "name": "Estudiante de Academia"
+    },
+    "prd_token_4c9f9a8969ac37b205c7ed88480cc934": {
+      "id": 6,
+      "username": "cliente",
+      "email": "cliente@prd.system",
+      "role": "cliente",
+      "name": "Cliente E-Commerce PRD"
+    }
+  }
+}

@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1787358964361,
+    "user_id": 1,
+    "action": "LOGIN_SUCCESS",
+    "resource": "owner",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T00:36:04.274Z"
+  },
+  {
+    "id": 1787359030906,
+    "user_id": 2,
+    "action": "LOGIN_SUCCESS",
+    "resource": "admin",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T00:37:10.530Z"
+  },
+  {
+    "id": 1787359053927,
+    "user_id": 3,
+    "action": "LOGIN_SUCCESS",
+    "resource": "docente",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T00:37:33.199Z"
+  },
+  {
+    "id": 1787369448614,
+    "user_id": 1,
+    "action": "LOGIN_SUCCESS",
+    "resource": "owner",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T03:30:48.203Z"
+  },
+  {
+    "id": 1787369481868,
+    "user_id": 3,
+    "action": "LOGIN_SUCCESS",
+    "resource": "docente",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T03:31:21.047Z"
+  },
+  {
+    "id": 1787369493762,
+    "user_id": 4,
+    "action": "LOGIN_SUCCESS",
+    "resource": "alumno",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T03:31:32.773Z"
+  },
+  {
+    "id": 1787369510746,
+    "user_id": 1,
+    "action": "LOGIN_SUCCESS",
+    "resource": "owner",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-22T03:31:49.984Z"
+  },
+  {
+    "id": 1787962760259,
+    "user_id": 1,
+    "action": "LOGIN_SUCCESS",
+    "resource": "owner",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T00:19:19.458Z"
+  },
+  {
+    "id": 1787962770781,
+    "user_id": 1,
+    "action": "LOGIN_SUCCESS",
+    "resource": "owner",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T00:19:30.504Z"
+  },
+  {
+    "id": 1787962771240,
+    "user_id": 1,
+    "action": "VIEW_ECONOMIC_LAB",
+    "resource": "/api/economic/overview",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T00:19:30.545Z"
+  },
+  {
+    "id": 1787977045104,
+    "user_id": 2,
+    "action": "LOGIN_SUCCESS",
+    "resource": "admin",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T04:17:24.809Z"
+  },
+  {
+    "id": 1787977045057,
+    "user_id": 6,
+    "action": "LOGIN_SUCCESS",
+    "resource": "cliente",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T04:17:24.924Z"
+  },
+  {
+    "id": 1787977045066,
+    "user_id": 3,
+    "action": "LOGIN_SUCCESS",
+    "resource": "docente",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T04:17:24.992Z"
+  },
+  {
+    "id": 1787977045981,
+    "user_id": 5,
+    "action": "LOGIN_SUCCESS",
+    "resource": "usuario",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T04:17:25.063Z"
+  },
+  {
+    "id": 1787977322982,
+    "user_id": 6,
+    "action": "LOGIN_SUCCESS",
+    "resource": "cliente",
+    "ip": "::1",
+    "status": "SUCCESS",
+    "timestamp": "2026-08-29T04:22:02.436Z"
+  }
+]
