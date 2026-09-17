@@ -1,18 +1,98 @@
-version: '3.9'
+version: '3.8'
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:16-alpine
     container_name: prd_postgres
-    restart: unless-stopped
+    restart: always
     environment:
+      POSTGRES_DB: prd_system_db
       POSTGRES_USER: prd_admin
-      POSTGRES_PASSWORD: prd_password
-      POSTGRES_DB: prd_db
+      POSTGRES_PASSWORD: prd_secure_password_2026
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - prd_internal_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: prd_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - prd_internal_network
+
+  minio:
+    image: minio/minio:latest
+    container_name: prd_minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio_admin
+      MINIO_ROOT_PASSWORD: minio_secure_password_2026
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - prd_internal_network
+
+  backend:
+    build:
+      context: ../../02_PROYECTOS/MULTIMODAL_SYSTEM/backend
+      dockerfile: Dockerfile
+    container_name: prd_backend_central
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://prd_admin:prd_secure_password_2026@postgres:5432/prd_system_db
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: prd_system_super_secret_jwt_key_2026
+      JWT_REFRESH_SECRET: prd_system_super_secret_refresh_key_2026
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - prd_internal_network
+
+  frontend:
+    build:
+      context: ../../02_PROYECTOS/MULTIMODAL_SYSTEM/frontend
+      dockerfile: Dockerfile
+    container_name: prd_frontend_central
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - prd_internal_network
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: prd_n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+    networks:
+      - prd_internal_network
 
 volumes:
   postgres_data:
+  minio_data:
+
+networks:
+  prd_internal_network:
+    driver: bridge
