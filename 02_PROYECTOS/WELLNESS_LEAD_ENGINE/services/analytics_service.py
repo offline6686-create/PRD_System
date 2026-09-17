@@ -44,8 +44,8 @@ class AnalyticsService:
             meeting_rate=meet_rate,
             show_rate=show_rate,
             conversion_rate=conv_rate,
-            cpl=2.50, # Simulated average CPL
-            cac=18.50 # Simulated average CAC
+            cpl=0.0,
+            cac=0.0
         )
 
     def get_geo_distribution(self, leads: List[Dict[str, Any]]) -> List[GeoMetricItem]:

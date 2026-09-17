@@ -8,22 +8,7 @@ from domain.enums import Platform
 
 router = APIRouter(prefix="/api/wellness/campaigns", tags=["Campaigns"])
 
-_in_memory_campaigns: List[CampaignResponse] = [
-    CampaignResponse(
-        id=uuid4(),
-        name="Hábitos Saludables - Olavarría & Azul",
-        platform=Platform.META_ADS,
-        description="Campaña Meta Ads orientada a bienestar en la zona centro de Buenos Aires.",
-        objective="LEAD_GENERATION",
-        status="ACTIVE",
-        budget=150.00,
-        start_date=datetime.utcnow(),
-        utm_source="facebook",
-        utm_medium="cpc",
-        utm_campaign="habitos_olavarria",
-        created_at=datetime.utcnow()
-    )
-]
+_in_memory_campaigns: List[CampaignResponse] = []
 
 @router.get("/", response_model=List[CampaignResponse])
 def list_campaigns():
