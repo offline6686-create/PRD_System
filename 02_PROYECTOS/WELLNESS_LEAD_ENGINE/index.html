@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISTEMA PRD - WELLNESS LEAD ENGINE</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .glass-card {
+      background: #111827;
+      border: 1px solid #1f2937;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 antialiased p-4 md:p-6 custom-scrollbar font-sans min-h-screen space-y-6">
+
+  <!-- PORTAL HEADER -->
+  <header class="glass-card rounded-2xl p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-gray-800">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-black text-xl shadow-md">
+        W
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-xl font-bold tracking-tight text-white">SISTEMA PRD • WELLNESS LEAD ENGINE</h1>
+          <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">EN VIVO</span>
+        </div>
+        <p class="text-xs text-gray-400">Motor de Captación, CRM y Embudo Geográfico Global</p>
+      </div>
+    </div>
+
+    <!-- ROLE TOGGLE FOR TIKTOK SECURITY & API STATUS -->
+    <div class="flex items-center space-x-3 text-xs w-full md:w-auto justify-between md:justify-end">
+      <div class="flex items-center space-x-2 bg-gray-900 border border-gray-800 p-1.5 rounded-xl">
+        <span class="text-gray-400 px-2 font-medium">Rol Actual:</span>
+        <select id="roleSelector" onchange="switchUserRole(this.value)" class="bg-transparent font-bold text-white focus:outline-none cursor-pointer">
+          <option value="ADMINISTRATOR" class="bg-gray-900 text-white">👑 ADMINISTRADOR</option>
+          <option value="DISTRIBUTOR" class="bg-gray-900 text-white">👥 DISTRIBUIDOR LOCAL</option>
+          <option value="CLIENT" class="bg-gray-900 text-white">🌱 CLIENTE</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-2 px-3 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>http://localhost:8000</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- TAB NAVIGATION BAR -->
+  <nav class="flex space-x-1 border-b border-gray-800 overflow-x-auto pb-1 custom-scrollbar">
+    <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn px-4 py-2 text-sm font-bold border-b-2 border-emerald-500 text-emerald-400 whitespace-nowrap">
+      📊 Overview & KPIs
+    </button>
+    <button onclick="switchTab('leads')" id="tab-leads" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
+      👥 Leads CRM & Duplicados
+    </button>
+    <button onclick="switchTab('funnel')" id="tab-funnel" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
+      📈 Embudo Visual
+    </button>
+    <button onclick="switchTab('tiktok')" id="tab-tiktok" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap flex items-center space-x-1">
+      <span>🔒 TikTok Ads</span>
+      <span class="text-[9px] px-1.5 py-0.2 bg-red-500/20 text-red-400 rounded">Admin Only</span>
+    </button>
+    <button onclick="switchTab('meetings')" id="tab-meetings" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
+      📅 Reuniones Zoom
+    </button>
+    <button onclick="switchTab('geo')" id="tab-geo" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
+      🌐 Geografía Global
+    </button>
+    <button onclick="switchTab('academy')" id="tab-academy" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
+      📚 Academia & IA Comercial
+    </button>
+  </nav>
+
+  <!-- CONTENT SECTIONS -->
+
+  <!-- TAB 1: OVERVIEW -->
+  <div id="content-overview" class="tab-content space-y-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div class="glass-card p-4 rounded-xl space-y-1">
+        <div class="text-xs text-gray-400 font-medium">Leads Totales</div>
+        <div class="text-2xl font-black text-white" id="kpi-total">0</div>
+        <div class="text-[11px] text-emerald-400 font-semibold">Sin Límite Geo</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl space-y-1">
+        <div class="text-xs text-gray-400 font-medium">Leads Nuevos</div>
+        <div class="text-2xl font-black text-cyan-400" id="kpi-new">0</div>
+        <div class="text-[11px] text-gray-400">Por contactar</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl space-y-1">
+        <div class="text-xs text-gray-400 font-medium">Cualificados</div>
+        <div class="text-2xl font-black text-emerald-400" id="kpi-qual">0</div>
+        <div class="text-[11px] text-emerald-400 font-semibold">0% Tasa Cualif.</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl space-y-1">
+        <div class="text-xs text-gray-400 font-medium">Zoom Agendados</div>
+        <div class="text-2xl font-black text-purple-400" id="kpi-sched">0</div>
+        <div class="text-[11px] text-purple-300">0% Agendamiento</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl space-y-1">
+        <div class="text-xs text-gray-400 font-medium">Zoom Realizados</div>
+        <div class="text-2xl font-black text-yellow-400" id="kpi-comp">0</div>
+        <div class="text-[11px] text-yellow-300">0% Show Rate</div>
+      </div>
+      <div class="glass-card p-4 rounded-xl space-y-1">
+        <div class="text-xs text-gray-400 font-medium">Conversiones</div>
+        <div class="text-2xl font-black text-emerald-500" id="kpi-conv">0</div>
+        <div class="text-[11px] text-emerald-400 font-bold">0% Tasa Final</div>
+      </div>
+    </div>
+
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-lg text-white">Panel de Control Limpio (Datos Reales)</h3>
+        <button onclick="openLeadModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition">
+          + Agregar Lead Real
+        </button>
+      </div>
+      <p class="text-xs text-gray-400">
+        El sistema está configurado en cero datos ficticios. Al agregar prospectos o enviar un webhook desde Meta/Google Ads a <code>/api/webhooks/leads</code>, la información aparecerá automáticamente.
+      </p>
+    </div>
+  </div>
+
+  <!-- TAB 2: LEADS CRM -->
+  <div id="content-leads" class="tab-content hidden space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-lg text-white">Gestión de Leads & Detección de Duplicados</h2>
+      <button onclick="openLeadModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl">
+        + Agregar Lead
+      </button>
+    </div>
+
+    <div class="glass-card rounded-2xl overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-gray-900 text-gray-400 uppercase border-b border-gray-800">
+          <tr>
+            <th class="p-3">Nombre</th>
+            <th class="p-3">Contacto</th>
+            <th class="p-3">Ubicación</th>
+            <th class="p-3">Fuente</th>
+            <th class="p-3">Interés</th>
+            <th class="p-3">Estado</th>
+            <th class="p-3">Score</th>
+            <th class="p-3 text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="leadsTableBody" class="divide-y divide-gray-800">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: FUNNEL VISUAL -->
+  <div id="content-funnel" class="tab-content hidden space-y-4">
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <h2 class="font-bold text-lg text-white">Visualizador de Embudo de Ventas</h2>
+      <div class="space-y-3 pt-2" id="funnelContainer">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: TIKTOK ADS MANAGER -->
+  <div id="content-tiktok" class="tab-content hidden space-y-4">
+    <div id="tiktokAdminAllowed" class="glass-card rounded-2xl p-6 space-y-4 border-emerald-500/30">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full font-bold text-xs">👑 ACCESO ADMINISTRADOR OTORGADO</span>
+          <h2 class="font-bold text-xl text-white">TikTok Ads Manager</h2>
+        </div>
+        <span class="text-xs text-gray-400">Mock Provider API Active</span>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+        <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+          <div class="text-xs text-gray-400">Impresiones TikTok</div>
+          <div class="text-2xl font-black text-white mt-1">28,400</div>
+        </div>
+        <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+          <div class="text-xs text-gray-400">Clics TikTok</div>
+          <div class="text-2xl font-black text-emerald-400 mt-1">1,120</div>
+        </div>
+        <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+          <div class="text-xs text-gray-400">Leads TikTok</div>
+          <div class="text-2xl font-black text-cyan-400 mt-1">64</div>
+        </div>
+        <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+          <div class="text-xs text-gray-400">CPL Promedio</div>
+          <div class="text-2xl font-black text-yellow-400 mt-1">$1.72</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tiktokAdminBlocked" class="hidden p-6 bg-red-950/40 border border-red-800/50 rounded-2xl text-red-200 space-y-2">
+      <div class="flex items-center space-x-3">
+        <span class="px-2.5 py-1 bg-red-600 text-white font-bold text-xs rounded-md">⛔ BLOQUEADO</span>
+        <h3 class="font-bold text-lg text-white">TikTok Ads Integration Restricted</h3>
+      </div>
+      <p class="text-sm text-red-300">
+        Acceso denegado por seguridad. La configuración y métricas de <strong>TikTok Ads</strong> están restringidas exclusivamente al rol de <strong>ADMINISTRADOR</strong>.
+      </p>
+    </div>
+  </div>
+
+  <!-- TAB 5: MEETINGS ZOOM -->
+  <div id="content-meetings" class="tab-content hidden space-y-4">
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-lg text-white">Reuniones por Zoom Agendadas</h2>
+        <span class="text-xs text-purple-400 font-semibold">Mock Zoom Active</span>
+      </div>
+      <div id="meetingsList" class="space-y-3">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: GEOGRAPHY -->
+  <div id="content-geo" class="tab-content hidden space-y-4">
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <h2 class="font-bold text-lg text-white">Gestión Geográfica Global</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="geoContainer">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 7: ACADEMY -->
+  <div id="content-academy" class="tab-content hidden space-y-4">
+    <div class="glass-card rounded-2xl p-6 space-y-4">
+      <h2 class="font-bold text-lg text-white">Academia & IA Comercial</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-2">
+          <h3 class="font-bold text-sm text-emerald-400">📄 Manuales & PDFs Oficiales</h3>
+          <ul class="space-y-1 text-gray-400">
+            <li>• Guión de Presentación por Zoom (20 min)</li>
+            <li>• Guía de Objeciones (Tiempo, Dinero)</li>
+            <li>• Políticas Legales Herbalife & Meta Ads</li>
+          </ul>
+        </div>
+        <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-2">
+          <h3 class="font-bold text-sm text-cyan-400">🤖 Generador de Reels</h3>
+          <p class="text-gray-400">5 Hábitos Mañaneros con deslinde legal oficial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="leadModal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden z-50">
+    <div class="glass-card rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl border border-gray-700">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-lg text-white">+ Agregar Lead Real</h3>
+        <button onclick="closeLeadModal()" class="text-gray-400 hover:text-white font-bold">✕</button>
+      </div>
+      <form onsubmit="handleCreateLead(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-400 mb-1">Nombre</label>
+          <input type="text" id="inputFirstName" required placeholder="Ej. Juan" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-white">
+        </div>
+        <div>
+          <label class="block text-gray-400 mb-1">Apellido</label>
+          <input type="text" id="inputLastName" placeholder="Ej. Pérez" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-white">
+        </div>
+        <div>
+          <label class="block text-gray-400 mb-1">WhatsApp / Teléfono</label>
+          <input type="text" id="inputPhone" placeholder="+5492284123456" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-white">
+        </div>
+        <div>
+          <label class="block text-gray-400 mb-1">Ciudad</label>
+          <input type="text" id="inputCity" placeholder="Olavarría, Tandil, Azul, etc." class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-white">
+        </div>
+        <div>
+          <label class="block text-gray-400 mb-1">Fuente</label>
+          <select id="inputSource" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 text-white">
+            <option value="META_ADS">Meta Ads</option>
+            <option value="INSTAGRAM">Instagram</option>
+            <option value="FACEBOOK">Facebook</option>
+            <option value="TIKTOK">TikTok Ads</option>
+            <option value="GOOGLE">Google Ads</option>
+            <option value="WHATSAPP">WhatsApp Directo</option>
+          </select>
+        </div>
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" onclick="closeLeadModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg">Guardar Lead</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentRole = 'ADMINISTRATOR';
+    let leadsData = [];
+    let meetingsData = [];
+
+    function renderLeadsTable() {
+      const tbody = document.getElementById('leadsTableBody');
+      if (leadsData.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="p-8 text-center text-gray-400">
+              <div class="space-y-2">
+                <div class="text-3xl">📭</div>
+                <div class="font-bold text-sm text-white">No hay leads registrados todavía</div>
+                <p class="text-xs">Los prospectos reales ingresados aparecerán aquí. Haz clic en <strong>"+ Agregar Lead"</strong> para incorporar el primero.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      tbody.innerHTML = leadsData.map(l => `
+        <tr class="hover:bg-gray-900/50">
+          <td class="p-3 font-bold text-white">${l.name}</td>
+          <td class="p-3 font-mono text-gray-300">${l.phone}</td>
+          <td class="p-3 font-semibold text-emerald-400">${l.city}</td>
+          <td class="p-3"><span class="px-2 py-0.5 bg-gray-800 text-gray-300 rounded text-[10px]">${l.source}</span></td>
+          <td class="p-3">${l.interest}</td>
+          <td class="p-3"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 font-bold rounded text-[10px]">${l.status}</span></td>
+          <td class="p-3 font-black text-cyan-400">${l.score} pts</td>
+          <td class="p-3 text-right space-x-1">
+            <button onclick="alert('WhatsApp Web para ${l.phone}')" class="px-2 py-1 bg-emerald-600/30 text-emerald-400 rounded text-[10px] font-bold">WhatsApp</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderFunnel() {
+      const container = document.getElementById('funnelContainer');
+      if (leadsData.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400">Sin datos de embudo. Agrega un lead real para comenzar.</div>`;
+        return;
+      }
+    }
+
+    function renderMeetings() {
+      const container = document.getElementById('meetingsList');
+      if (meetingsData.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400">No hay reuniones por Zoom agendadas todavía.</div>`;
+        return;
+      }
+    }
+
+    function renderGeo() {
+      const container = document.getElementById('geoContainer');
+      if (leadsData.length === 0) {
+        container.innerHTML = `<div class="col-span-3 p-6 text-center text-xs text-gray-400">Sin ubicaciones registradas aún.</div>`;
+        return;
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('border-emerald-500', 'text-emerald-400');
+        el.classList.add('border-transparent', 'text-gray-400');
+      });
+      document.getElementById(`content-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-gray-400');
+        activeBtn.classList.add('border-emerald-500', 'text-emerald-400');
+      }
+    }
+
+    function switchUserRole(role) {
+      currentRole = role;
+      if (role === 'ADMINISTRATOR') {
+        document.getElementById('tiktokAdminAllowed').classList.remove('hidden');
+        document.getElementById('tiktokAdminBlocked').classList.add('hidden');
+      } else {
+        document.getElementById('tiktokAdminAllowed').classList.add('hidden');
+        document.getElementById('tiktokAdminBlocked').classList.remove('hidden');
+      }
+    }
+
+    function openLeadModal() { document.getElementById('leadModal').classList.remove('hidden'); }
+    function closeLeadModal() { document.getElementById('leadModal').classList.add('hidden'); }
+
+    function handleCreateLead(e) {
+      e.preventDefault();
+      const fn = document.getElementById('inputFirstName').value;
+      const ln = document.getElementById('inputLastName').value;
+      const phone = document.getElementById('inputPhone').value;
+      const city = document.getElementById('inputCity').value || 'Olavarría';
+      const source = document.getElementById('inputSource').value;
+
+      leadsData.unshift({
+        id: Date.now(),
+        name: `${fn} ${ln}`.trim(),
+        phone: phone,
+        city: city,
+        source: source,
+        interest: 'HABITOS',
+        status: 'NEW',
+        score: 50
+      });
+      renderLeadsTable();
+      closeLeadModal();
+      document.getElementById('kpi-total').innerText = leadsData.length;
+      document.getElementById('kpi-new').innerText = leadsData.filter(l => l.status === 'NEW').length;
+    }
+
+    window.onload = function() {
+      renderLeadsTable();
+      renderFunnel();
+      renderMeetings();
+      renderGeo();
+    };
+  </script>
+</body>
+</html>

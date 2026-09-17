@@ -32,12 +32,22 @@ app.include_router(integrations.router)
 app.include_router(tiktok_ads_router.router)
 app.include_router(academy.router)
 
-@app.get("/")
+from fastapi.responses import HTMLResponse
+import os
+
+@app.get("/", response_class=HTMLResponse)
+def serve_prd_system_dashboard():
+    index_path = os.path.join(os.path.dirname(__file__), "index.html")
+    if os.path.exists(index_path):
+        with open(index_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    return HTMLResponse(content="<h1>SISTEMA PRD - WELLNESS LEAD ENGINE API ACTIVE</h1>")
+
+@app.get("/health")
 def health_check():
     return {
         "status": "online",
         "module": "WELLNESS LEAD ENGINE",
         "system": "PRD-FORGE",
-        "version": "1.0.0",
-        "providers_status": "MOCK_ACTIVE"
+        "version": "1.0.0"
     }
