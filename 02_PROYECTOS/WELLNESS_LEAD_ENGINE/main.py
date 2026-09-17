@@ -3,13 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers import (
     leads, campaigns, locations, meetings,
-    funnel, analytics, integrations, tiktok_ads_router, academy
+    funnel, analytics, integrations, tiktok_ads_router, academy,
+    economic_trading_router
 )
 
 app = FastAPI(
-    title="WELLNESS LEAD ENGINE API",
-    description="Motor de captación, CRM, embudo de ventas y seguimiento geográfico global para PRD-FORGE.",
-    version="1.0.0"
+    title="SISTEMA PRD - PLATFORM API",
+    description="Motor de captación, CRM, Economic Lab, Trading Bot y seguimiento geográfico global para PRD-FORGE.",
+    version="3.0.0"
 )
 
 # CORS configuration
@@ -31,6 +32,7 @@ app.include_router(analytics.router)
 app.include_router(integrations.router)
 app.include_router(tiktok_ads_router.router)
 app.include_router(academy.router)
+app.include_router(economic_trading_router.router)
 
 from fastapi.responses import HTMLResponse
 import os

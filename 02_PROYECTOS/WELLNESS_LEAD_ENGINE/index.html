@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SISTEMA PRD - WELLNESS LEAD ENGINE</title>
+  <title>SISTEMA PRD - PLATAFORMA INTEGRAL</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
     .glass-card {
@@ -25,26 +25,27 @@
   <!-- PORTAL HEADER -->
   <header class="glass-card rounded-2xl p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-gray-800">
     <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-black text-xl shadow-md">
-        W
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-emerald-600 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-md">
+        PRD
       </div>
       <div>
         <div class="flex items-center space-x-2">
-          <h1 class="text-xl font-bold tracking-tight text-white">SISTEMA PRD • WELLNESS LEAD ENGINE</h1>
-          <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">EN VIVO</span>
+          <h1 class="text-xl font-bold tracking-tight text-white">SISTEMA PRD • PLATAFORMA INTEGRAL v3.0.0</h1>
+          <span class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full">SERVIDORES EN VIVO</span>
         </div>
-        <p class="text-xs text-gray-400">Motor de Captación, CRM y Embudo Geográfico Global</p>
+        <p class="text-xs text-gray-400">Economic Lab 🔒 • Trading Bot FTMO • Wellness Lead Engine • E-Commerce • Academia</p>
       </div>
     </div>
 
-    <!-- ROLE TOGGLE FOR TIKTOK SECURITY & API STATUS -->
+    <!-- ROLE TOGGLE FOR RBAC PERMISSIONS -->
     <div class="flex items-center space-x-3 text-xs w-full md:w-auto justify-between md:justify-end">
       <div class="flex items-center space-x-2 bg-gray-900 border border-gray-800 p-1.5 rounded-xl">
-        <span class="text-gray-400 px-2 font-medium">Rol Actual:</span>
+        <span class="text-gray-400 px-2 font-medium">Rol Usuario:</span>
         <select id="roleSelector" onchange="switchUserRole(this.value)" class="bg-transparent font-bold text-white focus:outline-none cursor-pointer">
-          <option value="ADMINISTRATOR" class="bg-gray-900 text-white">👑 ADMINISTRADOR</option>
-          <option value="DISTRIBUTOR" class="bg-gray-900 text-white">👥 DISTRIBUIDOR LOCAL</option>
-          <option value="CLIENT" class="bg-gray-900 text-white">🌱 CLIENTE</option>
+          <option value="OWNER" class="bg-gray-900 text-white">👑 OWNER / PROPIETARIO</option>
+          <option value="ADMINISTRATOR" class="bg-gray-900 text-white">⚙️ ADMINISTRADOR</option>
+          <option value="DOCENTE" class="bg-gray-900 text-white">🎓 DOCENTE</option>
+          <option value="CLIENT" class="bg-gray-900 text-white">🌱 ALUMNO / USUARIO</option>
         </select>
       </div>
 
@@ -57,18 +58,22 @@
 
   <!-- TAB NAVIGATION BAR -->
   <nav class="flex space-x-1 border-b border-gray-800 overflow-x-auto pb-1 custom-scrollbar">
-    <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn px-4 py-2 text-sm font-bold border-b-2 border-emerald-500 text-emerald-400 whitespace-nowrap">
-      📊 Overview & KPIs
+    <button onclick="switchTab('economic')" id="tab-economic" class="tab-btn px-4 py-2 text-sm font-bold border-b-2 border-cyan-500 text-cyan-400 whitespace-nowrap flex items-center space-x-1">
+      <span>🔒 Economic Lab & Trading Bot</span>
+      <span class="text-[9px] px-1.5 py-0.2 bg-cyan-500/20 text-cyan-300 rounded font-mono">Owner Only</span>
+    </button>
+    <button onclick="switchTab('wellness')" id="tab-wellness" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
+      🌿 Wellness Lead Engine
     </button>
     <button onclick="switchTab('leads')" id="tab-leads" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
-      👥 Leads CRM & Duplicados
+      👥 CRM & Duplicados (0 Leads)
     </button>
     <button onclick="switchTab('funnel')" id="tab-funnel" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
       📈 Embudo Visual
     </button>
     <button onclick="switchTab('tiktok')" id="tab-tiktok" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap flex items-center space-x-1">
       <span>🔒 TikTok Ads</span>
-      <span class="text-[9px] px-1.5 py-0.2 bg-red-500/20 text-red-400 rounded">Admin Only</span>
+      <span class="text-[9px] px-1.5 py-0.2 bg-red-500/20 text-red-400 rounded">Admin</span>
     </button>
     <button onclick="switchTab('meetings')" id="tab-meetings" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
       📅 Reuniones Zoom
@@ -77,14 +82,140 @@
       🌐 Geografía Global
     </button>
     <button onclick="switchTab('academy')" id="tab-academy" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent hover:text-white whitespace-nowrap">
-      📚 Academia & IA Comercial
+      📚 Academia & IA
     </button>
   </nav>
 
   <!-- CONTENT SECTIONS -->
 
-  <!-- TAB 1: OVERVIEW -->
-  <div id="content-overview" class="tab-content space-y-6">
+  <!-- TAB 0: ECONOMIC LAB & TRADING BOT (OWNER ONLY) -->
+  <div id="content-economic" class="tab-content space-y-6">
+    <div id="economicOwnerAllowed" class="space-y-6">
+      <!-- TERMINAL MACROECONOMIC -->
+      <div class="glass-card rounded-2xl p-6 space-y-4 border-cyan-500/30">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 rounded-full font-bold text-xs">🔒 TERMINAL MACROECONÓMICA OFICIAL</span>
+            <h2 class="font-bold text-xl text-white">Economic Lab & Terminal de Datos</h2>
+          </div>
+          <span class="text-xs text-gray-400">FED • BCRA • INDEC • BYMA</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 pt-2">
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <div class="text-xs text-gray-400">Dólar MEP</div>
+            <div class="text-2xl font-black text-emerald-400 mt-1">$1,285.50</div>
+            <div class="text-[10px] text-emerald-400">Cotización Mercado</div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <div class="text-xs text-gray-400">Dólar CCL</div>
+            <div class="text-2xl font-black text-cyan-400 mt-1">$1,298.00</div>
+            <div class="text-[10px] text-cyan-400">Contado con Liqui</div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <div class="text-xs text-gray-400">Dólar Blue</div>
+            <div class="text-2xl font-black text-blue-400 mt-1">$1,315.00</div>
+            <div class="text-[10px] text-blue-400">Mercado Informal</div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <div class="text-xs text-gray-400">Inflación IPC</div>
+            <div class="text-2xl font-black text-yellow-400 mt-1">3.8%</div>
+            <div class="text-[10px] text-yellow-300">INDEC Mensual</div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <div class="text-xs text-gray-400">Tasa FED Funds</div>
+            <div class="text-2xl font-black text-purple-400 mt-1">5.25%</div>
+            <div class="text-[10px] text-purple-300">Federal Reserve</div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <div class="text-xs text-gray-400">Riesgo País</div>
+            <div class="text-2xl font-black text-red-400 mt-1">1,420</div>
+            <div class="text-[10px] text-red-300">EMBI+ Argentina</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRADING BOT & RISK ENGINE -->
+      <div class="glass-card rounded-2xl p-6 space-y-4 border-indigo-500/30">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <span class="px-3 py-1 bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 rounded-full font-bold text-xs">🤖 TRADING BOT ENGINE</span>
+            <h2 class="font-bold text-xl text-white">Bot de Trading & Gestor de Riesgo FTMO</h2>
+          </div>
+          <span class="text-xs text-emerald-400 font-bold">● ESTADO: PAPER TRADING ACTIVO</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-2 text-xs">
+            <h3 class="font-bold text-sm text-cyan-400">⚙️ Estrategia & Conector</h3>
+            <div>• Estrategia: <strong>Simple Breakout v2.4</strong></div>
+            <div>• Webhook TradingView: <strong class="text-emerald-400">ACTIVO</strong></div>
+            <div>• Intérprete Lenguaje Natural: <strong>TradeSpecification Engine</strong></div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-2 text-xs">
+            <h3 class="font-bold text-sm text-purple-400">🛡️ Reglas de Riesgo FTMO</h3>
+            <div>• Pérdida Máxima Diaria: <strong>5.0%</strong></div>
+            <div>• Drawdown Total Máximo: <strong>10.0%</strong></div>
+            <div>• Riesgo por Operación: <strong>1.0%</strong></div>
+            <div>• Position Sizing Auto: <strong>Calculado por Lote</strong></div>
+          </div>
+          <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-2 text-xs">
+            <h3 class="font-bold text-sm text-yellow-400">📊 Rendimiento & Auditoría</h3>
+            <div>• Win Rate: <strong>64.2%</strong></div>
+            <div>• Factor de Beneficio: <strong>1.85</strong></div>
+            <div>• Hash SHA-256 Audit: <code class="text-[10px] text-gray-400">e3b0c44...b855</code></div>
+          </div>
+        </div>
+
+        <!-- OPEN POSITIONS TABLE -->
+        <div class="pt-2">
+          <h3 class="font-bold text-sm text-white mb-2">Posiciones en Tiempo Real</h3>
+          <div class="overflow-x-auto rounded-xl border border-gray-800">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-gray-900 text-gray-400 uppercase border-b border-gray-800">
+                <tr>
+                  <th class="p-3">ID Operación</th>
+                  <th class="p-3">Instrumento</th>
+                  <th class="p-3">Tipo</th>
+                  <th class="p-3">Precio Entrada</th>
+                  <th class="p-3">Stop Loss</th>
+                  <th class="p-3">Take Profit</th>
+                  <th class="p-3">Riesgo</th>
+                  <th class="p-3">Estado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-800">
+                <tr>
+                  <td class="p-3 font-mono font-bold text-cyan-400">TRADE_FTMO_8829</td>
+                  <td class="p-3 font-bold text-white">BTC/USD</td>
+                  <td class="p-3"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 font-bold rounded text-[10px]">COMPRA</span></td>
+                  <td class="p-3 font-mono">$64,250.00</td>
+                  <td class="p-3 font-mono text-red-400">$63,100.00</td>
+                  <td class="p-3 font-mono text-emerald-400">$66,850.00</td>
+                  <td class="p-3 font-bold text-yellow-400">1.0%</td>
+                  <td class="p-3"><span class="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 font-bold rounded text-[10px]">ABIERTA (PAPER)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OWNER RESTRICTION BLOCKED BOX -->
+    <div id="economicOwnerBlocked" class="hidden p-6 bg-red-950/40 border border-red-800/50 rounded-2xl text-red-200 space-y-2">
+      <div class="flex items-center space-x-3">
+        <span class="px-2.5 py-1 bg-red-600 text-white font-bold text-xs rounded-md">⛔ BLOQUEADO</span>
+        <h3 class="font-bold text-lg text-white">Economic Lab & Trading Bot Restricted</h3>
+      </div>
+      <p class="text-sm text-red-300">
+        Acceso denegado por seguridad. El <strong>Economic Lab y la consola del Trading Bot</strong> están restringidos exclusivamente al rol de <strong>OWNER / PROPIETARIO</strong>. Cambia el selector de rol superior a OWNER para ingresar.
+      </p>
+    </div>
+  </div>
+
+  <!-- TAB 1: WELLNESS LEAD ENGINE OVERVIEW -->
+  <div id="content-wellness" class="tab-content hidden space-y-6">
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
       <div class="glass-card p-4 rounded-xl space-y-1">
         <div class="text-xs text-gray-400 font-medium">Leads Totales</div>
@@ -99,7 +230,7 @@
       <div class="glass-card p-4 rounded-xl space-y-1">
         <div class="text-xs text-gray-400 font-medium">Cualificados</div>
         <div class="text-2xl font-black text-emerald-400" id="kpi-qual">0</div>
-        <div class="text-[11px] text-emerald-400 font-semibold">0% Tasa Cualif.</div>
+        <div class="text-[11px] text-emerald-400 font-semibold">0% Cualificación</div>
       </div>
       <div class="glass-card p-4 rounded-xl space-y-1">
         <div class="text-xs text-gray-400 font-medium">Zoom Agendados</div>
@@ -297,7 +428,7 @@
   </div>
 
   <script>
-    let currentRole = 'ADMINISTRATOR';
+    let currentRole = 'OWNER';
     let leadsData = [];
     let meetingsData = [];
 
@@ -360,25 +491,36 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('border-emerald-500', 'text-emerald-400');
+        el.classList.remove('border-cyan-500', 'text-cyan-400', 'border-emerald-500', 'text-emerald-400');
         el.classList.add('border-transparent', 'text-gray-400');
       });
       document.getElementById(`content-${tabId}`).classList.remove('hidden');
       const activeBtn = document.getElementById(`tab-${tabId}`);
       if (activeBtn) {
         activeBtn.classList.remove('border-transparent', 'text-gray-400');
-        activeBtn.classList.add('border-emerald-500', 'text-emerald-400');
+        activeBtn.classList.add('border-cyan-500', 'text-cyan-400');
       }
     }
 
     function switchUserRole(role) {
       currentRole = role;
-      if (role === 'ADMINISTRATOR') {
+      
+      // TikTok Admin Guard
+      if (role === 'ADMINISTRATOR' || role === 'OWNER') {
         document.getElementById('tiktokAdminAllowed').classList.remove('hidden');
         document.getElementById('tiktokAdminBlocked').classList.add('hidden');
       } else {
         document.getElementById('tiktokAdminAllowed').classList.add('hidden');
         document.getElementById('tiktokAdminBlocked').classList.remove('hidden');
+      }
+
+      // Economic Lab Owner Guard
+      if (role === 'OWNER') {
+        document.getElementById('economicOwnerAllowed').classList.remove('hidden');
+        document.getElementById('economicOwnerBlocked').classList.add('hidden');
+      } else {
+        document.getElementById('economicOwnerAllowed').classList.add('hidden');
+        document.getElementById('economicOwnerBlocked').classList.remove('hidden');
       }
     }
 
