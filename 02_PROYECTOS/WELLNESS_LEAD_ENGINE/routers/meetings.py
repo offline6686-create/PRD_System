@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Status
+from fastapi import APIRouter, status
 from typing import List
 from uuid import uuid4
 from datetime import datetime
@@ -12,7 +12,7 @@ zoom_provider = MockZoomProvider()
 
 _in_memory_meetings: List[MeetingResponse] = []
 
-@router.post("/", response_model=MeetingResponse, status_code=Status.HTTP_201_CREATED)
+@router.post("/", response_model=MeetingResponse, status_code=status.HTTP_201_CREATED)
 def schedule_meeting(payload: MeetingSchedule):
     zoom_res = zoom_provider.create_meeting(
         lead_id=str(payload.lead_id),

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Query, Status
+from fastapi import APIRouter, HTTPException, Query, status
 from typing import List, Optional
 from uuid import UUID
 
@@ -8,7 +8,7 @@ from services.lead_service import LeadService
 router = APIRouter(prefix="/api/wellness/leads", tags=["Leads"])
 lead_service = LeadService()
 
-@router.post("/", response_model=LeadResponse, status_code=Status.HTTP_201_CREATED)
+@router.post("/", response_model=LeadResponse, status_code=status.HTTP_201_CREATED)
 def create_lead(payload: LeadCreate):
     return lead_service.create_lead(payload)
 

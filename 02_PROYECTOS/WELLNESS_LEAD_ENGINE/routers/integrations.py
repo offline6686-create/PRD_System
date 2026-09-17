@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Header, HTTPException, Status
+from fastapi import APIRouter, Header, HTTPException, status
 from typing import Dict, Any, Optional
 from uuid import UUID
 
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api/webhooks", tags=["Integrations & Webhooks"])
 lead_service = LeadService()
 automation_engine = AutomationEngine()
 
-@router.post("/leads", response_model=LeadResponse, status_code=Status.HTTP_201_CREATED)
+@router.post("/leads", response_model=LeadResponse, status_code=status.HTTP_201_CREATED)
 def receive_external_lead_webhook(
     payload: Dict[str, Any],
     x_webhook_signature: Optional[str] = Header(None)

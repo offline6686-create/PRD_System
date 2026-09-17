@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Status
+from fastapi import APIRouter, status
 from typing import List
 from uuid import uuid4
 from datetime import datetime
@@ -21,7 +21,7 @@ _in_memory_locations: List[LocationResponse] = [
 def list_locations():
     return _in_memory_locations
 
-@router.post("/", response_model=LocationResponse, status_code=Status.HTTP_201_CREATED)
+@router.post("/", response_model=LocationResponse, status_code=status.HTTP_201_CREATED)
 def create_location(payload: LocationCreate):
     loc = LocationResponse(
         id=uuid4(),

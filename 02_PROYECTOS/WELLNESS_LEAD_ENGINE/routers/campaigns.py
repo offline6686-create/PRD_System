@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Status
+from fastapi import APIRouter, status
 from typing import List
 from uuid import uuid4, UUID
 from datetime import datetime
@@ -29,7 +29,7 @@ _in_memory_campaigns: List[CampaignResponse] = [
 def list_campaigns():
     return _in_memory_campaigns
 
-@router.post("/", response_model=CampaignResponse, status_code=Status.HTTP_201_CREATED)
+@router.post("/", response_model=CampaignResponse, status_code=status.HTTP_201_CREATED)
 def create_campaign(payload: CampaignCreate):
     campaign = CampaignResponse(
         id=uuid4(),

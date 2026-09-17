@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Header, Depends, Status
+from fastapi import APIRouter, HTTPException, Header, Depends, status
 from typing import Dict, Any, Optional
 from domain.enums import UserRole
 from providers.tiktok_ads import MockTikTokAdsProvider
@@ -24,7 +24,7 @@ def get_tiktok_campaign_metrics(
     """
     if user_role != UserRole.ADMINISTRATOR:
         raise HTTPException(
-            status_code=Status.HTTP_403_FORBIDDEN,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Access Denied: TikTok Ads integration is restricted exclusively to the ADMINISTRATOR role."
         )
     
