@@ -1,0 +1,11 @@
+import React from 'react';
+import { AppShell } from '@/components/layout/AppShell';
+import { ProjectsView } from '@/features/projects/ProjectsView';
+
+export default function ProjectsPage() {
+  return (
+    <AppShell>
+      <ProjectsView />
+    </AppShell>
+  );
+}
